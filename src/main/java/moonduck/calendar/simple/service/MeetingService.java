@@ -1,5 +1,6 @@
 package moonduck.calendar.simple.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -29,5 +30,11 @@ public class MeetingService {
 		
 		Meeting meetingEntity = meetingDao.save(meeting);
 		return meetingEntity.getId();
+	}
+	
+	@Transactional
+	public List<Meeting> findMeetingByDate(LocalDate date) {
+		List<Meeting> allMeetings = meetingDao.findMeetingByDate(date);
+		return allMeetings;
 	}
 }

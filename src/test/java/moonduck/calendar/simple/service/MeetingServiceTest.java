@@ -68,4 +68,12 @@ public class MeetingServiceTest {
 
 		service.addOrUpdateMeeting(mockMeeting);
 	}
+	
+	@Test
+	public void 기준일의_모든_회의_가져오기() {
+		List<Meeting> mockMeetings = mock(List.class);
+		when(mockDao.findMeetingByDate(any(LocalDate.class))).thenReturn(mockMeetings);
+		
+		assertTrue(mockMeetings == service.findMeetingByDate(LocalDate.now())); //LocalDate.now는 의미 없는 값임
+	}
 }
