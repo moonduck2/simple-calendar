@@ -54,7 +54,7 @@ public class MeetingServiceTest {
 		when(mockMeeting.getStartTime()).thenReturn(LocalTime.now());
 		when(mockMeeting.getEndTime()).thenReturn(LocalTime.now());
 		
-		assertEquals(1, service.addOrUpdateMeeting(mockMeeting));
+		assertEquals(1, service.addMeeting(mockMeeting));
 	}
 
 	@Test(expected = MeetingDuplicationException.class)
@@ -72,7 +72,7 @@ public class MeetingServiceTest {
 		when(mockMeeting.getStartTime()).thenReturn(LocalTime.now());
 		when(mockMeeting.getEndTime()).thenReturn(LocalTime.now());
 
-		service.addOrUpdateMeeting(mockMeeting);
+		service.addMeeting(mockMeeting);
 	}
 	
 	@Test

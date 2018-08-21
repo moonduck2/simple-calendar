@@ -36,12 +36,12 @@ public class ApiController {
 	
 	@PostMapping
 	public int newMeeting(@RequestBody @Valid Meeting meeting) {
-		return meetingService.addOrUpdateMeeting(meeting);
+		return meetingService.addMeeting(meeting);
 	}
 	
 	@PutMapping
-	public int modifyMeeting(@RequestBody Meeting meetinig) {
-		throw new UnsupportedOperationException("not implemented");
+	public int modifyMeeting(@RequestBody @Valid Meeting meeting) {
+		return meetingService.addMeeting(meeting);
 	}
 	
 	@DeleteMapping("{meetingId}")

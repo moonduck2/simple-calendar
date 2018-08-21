@@ -28,7 +28,7 @@ public class MeetingService {
 	private RecurrenceService recurrenceService;
 	
 	@Transactional
-	public int addOrUpdateMeeting(Meeting meeting) {
+	public int addMeeting(Meeting meeting) {
 		List<Meeting> possibleDuplicate = meetingDao.findAllPossibleDuplicate(meeting.getMeetingRoom(),
 				meeting.getStartDate(), meeting.getEndDate(), meeting.getStartTime(), meeting.getEndTime());
 		if (!possibleDuplicate.isEmpty()) {
