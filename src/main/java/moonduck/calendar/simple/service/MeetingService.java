@@ -26,6 +26,8 @@ public class MeetingService {
 		if (!possibleDuplicate.isEmpty()) {
 			throw new MeetingDuplicationException();
 		}
-		return 0;
+		
+		Meeting meetingEntity = meetingDao.save(meeting);
+		return meetingEntity.getId();
 	}
 }
