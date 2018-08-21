@@ -8,12 +8,12 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-import moonduck.calendar.simple.validator.DateRangeValidator;
+import moonduck.calendar.simple.validator.MeetingValidator;
 
-@Constraint(validatedBy = DateRangeValidator.class)
+@Constraint(validatedBy = MeetingValidator.class)
 @Target( { ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ValidDateRange {
+public @interface ValidMeeting {
 	String message() default "Invalid date range";
 	Class<?>[] groups() default {};
   Class<? extends Payload>[] payload() default {};

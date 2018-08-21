@@ -15,13 +15,12 @@ import javax.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import moonduck.calendar.simple.type.HasDateRange;
-import moonduck.calendar.simple.validator.annotation.ValidDateRange;
+import moonduck.calendar.simple.validator.annotation.ValidMeeting;
 
 @Table(name = "meeting")
 @Entity
-@ValidDateRange
-public class Meeting implements HasDateRange {
+@ValidMeeting
+public class Meeting {
 	@Id
 	@GeneratedValue
 	private Integer id;
@@ -61,12 +60,10 @@ public class Meeting implements HasDateRange {
 		return id;
 	}
 
-	@Override
 	public LocalDate getStartDate() {
 		return startDate;
 	}
 
-	@Override
 	public LocalDate getEndDate() {
 		return endDate;
 	}
