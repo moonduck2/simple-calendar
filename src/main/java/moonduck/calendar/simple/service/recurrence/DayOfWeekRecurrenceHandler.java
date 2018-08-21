@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import moonduck.calendar.simple.entity.Meeting;
 import moonduck.calendar.simple.entity.Recurrence;
+import moonduck.calendar.simple.enumeration.RecurrenceType;
 
 @Service
 public class DayOfWeekRecurrenceHandler implements RecurrenceHandler {
@@ -19,5 +20,10 @@ public class DayOfWeekRecurrenceHandler implements RecurrenceHandler {
 		}
 		
 		return date.getDayOfWeek().getValue() == recurrence.getDayOfWeek();
+	}
+
+	@Override
+	public RecurrenceType getAvailableType() {
+		return RecurrenceType.ONCE_A_WEEK;
 	}
 }
