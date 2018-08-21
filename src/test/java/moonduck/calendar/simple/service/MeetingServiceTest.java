@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
@@ -90,6 +91,8 @@ public class MeetingServiceTest {
 		List<Meeting> mockMeetings = Arrays.asList(abandonedMeeting, availableMeeting);
 		when(mockDao.findMeetingByDate(any(LocalDate.class))).thenReturn(mockMeetings);
 		
-		assertEquals(Arrays.asList(availableMeeting), service.findMeetingByDate(LocalDate.now())); //LocalDate.now는 의미 없는 값임
+		//LocalDate.now는 의미 없는 값임, 회의실을 지정하지 않을 경우 모든 회의실의 일정을 조회함
+		assertEquals(Arrays.asList(availableMeeting), 
+				service.findMeetingByDate(LocalDate.now(), Collections.emptyList()));
 	}
 }

@@ -2,6 +2,7 @@ package moonduck.calendar.simple.dao;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +21,7 @@ public interface MeetingDao extends CrudRepository<Meeting, Integer> {
 	
 	@Query("select m from Meeting m where startDate <= :baseDate and endDate >= :baseDate")
 	List<Meeting> findMeetingByDate(@Param("baseDate") LocalDate baseDate);
+	
+	@Query("select m from Meeting m where startDate <= :baseDate and endDate >= :baseDate and m.meetingRoom in :rooms")
+	List<Meeting> findMeetingByDate(@Param("baseDate") LocalDate baseDate, @Param("rooms") Collection<String> rooms);
 }

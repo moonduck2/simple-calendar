@@ -29,7 +29,7 @@ public class ApiController {
 	@GetMapping
 	public List<Meeting> getMeetings(@RequestParam @DateTimeFormat(iso = ISO.DATE) LocalDate date, 
 			@RequestParam(required = false) Collection<String> rooms) {
-		return meetingService.findMeetingByDate(date);
+		return meetingService.findMeetingByDate(date, rooms);
 	}
 	
 	@PostMapping

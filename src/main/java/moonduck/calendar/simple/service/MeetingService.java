@@ -1,6 +1,7 @@
 package moonduck.calendar.simple.service;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,6 +9,7 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import moonduck.calendar.simple.dao.MeetingDao;
 import moonduck.calendar.simple.entity.Meeting;
@@ -38,8 +40,11 @@ public class MeetingService {
 	}
 	
 	@Transactional
-	public List<Meeting> findMeetingByDate(LocalDate date) {
-		List<Meeting> allMeetings = meetingDao.findMeetingByDate(date);
+	public List<Meeting> findMeetingByDate(LocalDate date, Collection<String> rooms) {
+		List<Meeting> allMeetings = CollectionUtils.isEmpty(rooms) 
+				? meetingDao.findMeetingByDate(date)
+				: meetingDao.findMeetingByDate(date, rooms);
+				
 		return allMeetings.stream().filter(meeting -> {
 			for (Recurrence recur : meeting.getRecurrence()) {
 				if (recurrenceService.isOccur(date, meeting, recur)) {
