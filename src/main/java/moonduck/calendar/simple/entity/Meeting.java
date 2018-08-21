@@ -9,6 +9,8 @@ import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import moonduck.calendar.simple.entity.Recurrence.RecurrenceDto;
+
 @Table(name = "meeting")
 @Entity(name = "meeting")
 public class Meeting {
@@ -35,4 +37,16 @@ public class Meeting {
 	
 	@OneToMany(mappedBy = "meeting")
 	private List<Recurrence> recurrence;
+	
+	public static class MeetingDto {
+		private LocalDate start;
+		private LocalDate end;
+		private LocalTime startTime;
+		private LocalTime endTime;
+		private String title;
+		private String content;
+		private String meetingRoom;
+		
+		private List<RecurrenceDto> recurrence;
+	}
 }

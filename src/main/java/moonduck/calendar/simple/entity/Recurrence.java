@@ -21,4 +21,10 @@ public class Recurrence {
 	
 	@ManyToOne
 	private Meeting meeting;
+	
+	public static class RecurrenceDto {
+		private RecurrenceType type;
+		private int count;
+		private int dayOfWeek;
+	}
 }
