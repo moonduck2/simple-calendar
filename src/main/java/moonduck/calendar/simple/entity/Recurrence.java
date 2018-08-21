@@ -9,7 +9,7 @@ import javax.persistence.Table;
 import moonduck.calendar.simple.enumeration.RecurrenceType;
 
 @Table(name = "recurrence")
-@Entity(name = "recurrence")
+@Entity
 public class Recurrence {
 	@Id
 	@Column
@@ -26,18 +26,44 @@ public class Recurrence {
 	
 	@ManyToOne
 	private Meeting meeting;
-	
-	public static class RecurrenceDto {
-		private RecurrenceType type;
-		private int count;
-		private int dayOfWeek;
-		
-		public Recurrence toEntity() {
-			Recurrence recur = new Recurrence();
-			recur.type = type;
-			recur.count = count;
-			recur.dayOfWeek = dayOfWeek;
-			return recur;
-		}
+
+	public int getId() {
+		return id;
+	}
+
+	public RecurrenceType getType() {
+		return type;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public int getDayOfWeek() {
+		return dayOfWeek;
+	}
+
+	public Meeting getMeeting() {
+		return meeting;
+	}
+
+	public Recurrence setType(RecurrenceType type) {
+		this.type = type;
+		return this;
+	}
+
+	public Recurrence setCount(int count) {
+		this.count = count;
+		return this;
+	}
+
+	public Recurrence setDayOfWeek(int dayOfWeek) {
+		this.dayOfWeek = dayOfWeek;
+		return this;
+	}
+
+	public Recurrence setMeeting(Meeting meeting) {
+		this.meeting = meeting;
+		return this;
 	}
 }
