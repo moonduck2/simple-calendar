@@ -17,4 +17,7 @@ public interface MeetingDao extends CrudRepository<Meeting, Integer> {
 	List<Meeting> findAllPossibleDuplicate(@Param("room") String room, 
 			@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, 
 			@Param("startTime") LocalTime startTime, @Param("endTime") LocalTime endTime);
+	
+	@Query("select m from Meeting m where startDate <= :baseDate and endDate >= :baseDate")
+	List<Meeting> findMeetingByDate(@Param("baseDate") LocalDate baseDate);
 }

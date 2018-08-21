@@ -64,4 +64,16 @@ public class MeetingDaoTest {
 				LocalDate.of(2018, 7, 31), LocalDate.of(2018, 9, 1), LocalTime.of(9, 0), LocalTime.of(10, 0));
 		assertEquals(1, possibleDuplicate.size());
 	}
+	
+	@Test
+	public void 기준_날짜에_해당하는_회의_조회() {
+		List<Meeting> meetings = dao.findMeetingByDate(LocalDate.of(2018, 8, 1));
+		assertEquals(1, meetings.size());
+		
+		meetings = dao.findMeetingByDate(LocalDate.of(2018, 1, 1));
+		assertEquals(0, meetings.size());
+		
+		meetings = dao.findMeetingByDate(LocalDate.of(2019, 1, 1));
+		assertEquals(0, meetings.size());
+	}
 }
