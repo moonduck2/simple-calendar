@@ -17,6 +17,7 @@ public class DayOfWeekRecurrenceHandler implements RecurrenceHandler {
 		if (date.isBefore(startDate) || date.isAfter(endDate)) {
 			return false;
 		}
-		return true;
+		
+		return date.getDayOfWeek().getValue() == recurrence.getDayOfWeek();
 	}
 }

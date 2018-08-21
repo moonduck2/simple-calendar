@@ -59,6 +59,5 @@ public class DayOfWeekRecurrenceHandlerTest {
 		
 		//8월 1일~31일 이내 수요일이 아닌 요일은 false
 		assertFalse(checker.isOccur(LocalDate.of(2018, 8, 3), mockMeeting, mockRecur));
-		
 	}
 }
