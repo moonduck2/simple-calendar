@@ -68,4 +68,9 @@ public class MeetingService {
 			return false;
 		}).collect(Collectors.toList());
 	}
+	
+	@Transactional
+	public void deleteMeeting(int meetingId) {
+		meetingDao.deleteById(meetingId);
+	}
 }

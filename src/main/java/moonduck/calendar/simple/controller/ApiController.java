@@ -46,6 +46,6 @@ public class ApiController {
 	
 	@DeleteMapping("{meetingId}")
 	public void deleteMeeting(@PathVariable int meetingId) {
-		throw new UnsupportedOperationException("not implemented");
+		meetingService.deleteMeeting(meetingId);
 	}
 }
