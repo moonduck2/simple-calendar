@@ -7,17 +7,21 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import moonduck.calendar.simple.type.HasDateRange;
+import moonduck.calendar.simple.validator.annotation.ValidDateRange;
+
 @Table(name = "meeting")
 @Entity
-public class Meeting {
+@ValidDateRange
+public class Meeting implements HasDateRange {
 	@Id
 	@GeneratedValue
 	private Integer id;
@@ -30,10 +34,12 @@ public class Meeting {
 	@DateTimeFormat(iso = ISO.DATE)
 	private LocalDate endDate;
 	
+	@NotNull
 	@Column(name = "start_time", nullable = false)
 	@DateTimeFormat(iso = ISO.TIME)
 	private LocalTime startTime;
 	
+	@NotNull
 	@Column(name = "end_time", nullable = false)
 	@DateTimeFormat(iso = ISO.TIME)
 	private LocalTime endTime;
@@ -44,6 +50,7 @@ public class Meeting {
 	@Column(length = 1000)
 	private String content;
 	
+	@NotNull
 	@Column(name = "meeting_room", length = 20)
 	private String meetingRoom;
 	
@@ -54,10 +61,12 @@ public class Meeting {
 		return id;
 	}
 
+	@Override
 	public LocalDate getStartDate() {
 		return startDate;
 	}
 
+	@Override
 	public LocalDate getEndDate() {
 		return endDate;
 	}

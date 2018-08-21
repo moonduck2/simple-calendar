@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
@@ -33,7 +35,7 @@ public class ApiController {
 	}
 	
 	@PostMapping
-	public int newMeeting(@RequestBody Meeting meeting) {
+	public int newMeeting(@RequestBody @Valid Meeting meeting) {
 		return meetingService.addOrUpdateMeeting(meeting);
 	}
 	
