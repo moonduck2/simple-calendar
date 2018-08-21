@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -14,28 +16,28 @@ import javax.persistence.Table;
 @Entity
 public class Meeting {
 	@Id
-	@Column
+	@GeneratedValue
 	private int id;
 	
-	@Column(name = "start_date")
+	@Column(name = "start_date", nullable = false)
 	private LocalDate startDate;
 	
-	@Column(name = "end_date")
+	@Column(name = "end_date", nullable = false)
 	private LocalDate endDate;
 	
-	@Column(name = "start_time")
+	@Column(name = "start_time", nullable = false)
 	private LocalTime startTime;
 	
-	@Column(name = "end_time")
+	@Column(name = "end_time", nullable = false)
 	private LocalTime endTime;
 	
 	@Column
 	private String title;
 	
-	@Column
+	@Column(length = 1000)
 	private String content;
 	
-	@Column(name = "meeting_room")
+	@Column(name = "meeting_room", length = 20)
 	private String meetingRoom;
 	
 	@OneToMany(mappedBy = "meeting")

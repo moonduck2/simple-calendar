@@ -2,6 +2,10 @@ package moonduck.calendar.simple.entity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -12,17 +16,18 @@ import moonduck.calendar.simple.enumeration.RecurrenceType;
 @Entity
 public class Recurrence {
 	@Id
-	@Column
+	@GeneratedValue
 	private int id;
 	
-	@Column(name = "type")
+	@Column(name = "type", nullable = false)
+	@Enumerated(EnumType.STRING)
 	private RecurrenceType type;
 	
 	@Column(name = "count")
-	private int count;
+	private Integer count;
 	
 	@Column(name = "day_of_week")
-	private int dayOfWeek;
+	private Integer dayOfWeek;
 	
 	@ManyToOne
 	private Meeting meeting;
