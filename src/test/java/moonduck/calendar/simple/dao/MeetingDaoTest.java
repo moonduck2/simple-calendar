@@ -26,8 +26,8 @@ public class MeetingDaoTest {
 		//07-01 ~ 08-01, 09:00 ~ 11:00
 		dao.save(new Meeting()
 				.setMeetingRoom("회의실1")
-				.setStart(LocalDate.of(2018, 7, 1))
-				.setEnd(LocalDate.of(2018, 9, 1))
+				.setStartDate(LocalDate.of(2018, 7, 1))
+				.setEndDate(LocalDate.of(2018, 9, 1))
 				.setStartTime(LocalTime.of(9, 0))
 				.setEndTime(LocalTime.of(11, 0)));
 	}

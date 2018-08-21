@@ -30,7 +30,7 @@ public class MeetingService {
 	@Transactional
 	public int addOrUpdateMeeting(Meeting meeting) {
 		List<Meeting> possibleDuplicate = meetingDao.findAllPossibleDuplicate(meeting.getMeetingRoom(),
-				meeting.getStart(), meeting.getEnd(), meeting.getStartTime(), meeting.getEndTime());
+				meeting.getStartDate(), meeting.getEndDate(), meeting.getStartTime(), meeting.getEndTime());
 		if (!possibleDuplicate.isEmpty()) {
 			throw new MeetingDuplicationException();
 		}

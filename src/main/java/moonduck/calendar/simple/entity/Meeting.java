@@ -12,23 +12,30 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
 @Table(name = "meeting")
 @Entity
 public class Meeting {
 	@Id
 	@GeneratedValue
-	private int id;
+	private Integer id;
 	
 	@Column(name = "start_date", nullable = false)
+	@DateTimeFormat(iso = ISO.DATE)
 	private LocalDate startDate;
 	
 	@Column(name = "end_date", nullable = false)
+	@DateTimeFormat(iso = ISO.DATE)
 	private LocalDate endDate;
 	
 	@Column(name = "start_time", nullable = false)
+	@DateTimeFormat(iso = ISO.TIME)
 	private LocalTime startTime;
 	
 	@Column(name = "end_time", nullable = false)
+	@DateTimeFormat(iso = ISO.TIME)
 	private LocalTime endTime;
 	
 	@Column
@@ -43,15 +50,15 @@ public class Meeting {
 	@OneToMany(mappedBy = "meeting")
 	private List<Recurrence> recurrence;
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
-	public LocalDate getStart() {
+	public LocalDate getStartDate() {
 		return startDate;
 	}
 
-	public LocalDate getEnd() {
+	public LocalDate getEndDate() {
 		return endDate;
 	}
 
@@ -79,12 +86,12 @@ public class Meeting {
 		return recurrence;
 	}
 
-	public Meeting setStart(LocalDate start) {
+	public Meeting setStartDate(LocalDate start) {
 		this.startDate = start;
 		return this;
 	}
 
-	public Meeting setEnd(LocalDate end) {
+	public Meeting setEndDate(LocalDate end) {
 		this.endDate = end;
 		return this;
 	}

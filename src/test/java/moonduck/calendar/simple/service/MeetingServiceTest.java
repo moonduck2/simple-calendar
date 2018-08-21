@@ -49,8 +49,8 @@ public class MeetingServiceTest {
 		//mockMeeting의 getter의 값들은 의미없는 값임
 		Meeting mockMeeting = mock(Meeting.class);
 		when(mockMeeting.getMeetingRoom()).thenReturn("회의실");
-		when(mockMeeting.getStart()).thenReturn(LocalDate.now());
-		when(mockMeeting.getEnd()).thenReturn(LocalDate.now());
+		when(mockMeeting.getStartDate()).thenReturn(LocalDate.now());
+		when(mockMeeting.getEndDate()).thenReturn(LocalDate.now());
 		when(mockMeeting.getStartTime()).thenReturn(LocalTime.now());
 		when(mockMeeting.getEndTime()).thenReturn(LocalTime.now());
 		
@@ -67,8 +67,8 @@ public class MeetingServiceTest {
 		//mockMeeting의 getter의 값들은 의미없는 값임
 		Meeting mockMeeting = mock(Meeting.class);
 		when(mockMeeting.getMeetingRoom()).thenReturn("회의실");
-		when(mockMeeting.getStart()).thenReturn(LocalDate.now());
-		when(mockMeeting.getEnd()).thenReturn(LocalDate.now());
+		when(mockMeeting.getStartDate()).thenReturn(LocalDate.now());
+		when(mockMeeting.getEndDate()).thenReturn(LocalDate.now());
 		when(mockMeeting.getStartTime()).thenReturn(LocalTime.now());
 		when(mockMeeting.getEndTime()).thenReturn(LocalTime.now());
 

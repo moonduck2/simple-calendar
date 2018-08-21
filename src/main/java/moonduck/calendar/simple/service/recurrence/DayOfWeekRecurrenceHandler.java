@@ -13,8 +13,8 @@ public class DayOfWeekRecurrenceHandler implements RecurrenceHandler {
 
 	@Override
 	public boolean isOccur(LocalDate date, Meeting meeting, Recurrence recurrence) {
-		LocalDate startDate = meeting.getStart();
-		LocalDate endDate = meeting.getEnd();
+		LocalDate startDate = meeting.getStartDate();
+		LocalDate endDate = meeting.getEndDate();
 		if (date.isBefore(startDate) || date.isAfter(endDate)) {
 			return false;
 		}

@@ -34,7 +34,7 @@ public class ApiController {
 	
 	@PostMapping
 	public int newMeeting(@RequestBody Meeting meeting) {
-		throw new UnsupportedOperationException("not implemented");
+		return meetingService.addOrUpdateMeeting(meeting);
 	}
 	
 	@PutMapping

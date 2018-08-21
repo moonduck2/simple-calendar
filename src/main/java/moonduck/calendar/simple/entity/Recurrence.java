@@ -17,7 +17,7 @@ import moonduck.calendar.simple.enumeration.RecurrenceType;
 public class Recurrence {
 	@Id
 	@GeneratedValue
-	private int id;
+	private Integer id;
 	
 	@Column(name = "type", nullable = false)
 	@Enumerated(EnumType.STRING)
@@ -32,7 +32,7 @@ public class Recurrence {
 	@ManyToOne
 	private Meeting meeting;
 
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 
