@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import moonduck.calendar.simple.dao.MeetingDao;
 import moonduck.calendar.simple.entity.Meeting;
+import moonduck.calendar.simple.exception.MeetingDuplicationException;
 
 /**
  * 회의실 예약에 관한 트랜잭션 처리를 총괄한다. 
@@ -20,8 +21,11 @@ public class MeetingService {
 	
 	@Transactional
 	public int addOrUpdateMeeting(Meeting meeting) {
-		List<Meeting> possibleDuplcate = meetingDao.findAllPossibleDuplicate(meeting.getStart(), meeting.getEnd());
-		
+		List<Meeting> possibleDuplicate = meetingDao.findAllPossibleDuplicate(meeting.getMeetingRoom(),
+				meeting.getStart(), meeting.getEnd(), meeting.getStartTime(), meeting.getEndTime());
+		if (!possibleDuplicate.isEmpty()) {
+			throw new MeetingDuplicationException();
+		}
 		return 0;
 	}
 }
