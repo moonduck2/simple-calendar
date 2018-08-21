@@ -31,5 +31,13 @@ public class Recurrence {
 		private RecurrenceType type;
 		private int count;
 		private int dayOfWeek;
+		
+		public Recurrence toEntity() {
+			Recurrence recur = new Recurrence();
+			recur.type = type;
+			recur.count = count;
+			recur.dayOfWeek = dayOfWeek;
+			return recur;
+		}
 	}
 }
