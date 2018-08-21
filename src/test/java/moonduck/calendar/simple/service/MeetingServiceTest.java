@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;
@@ -16,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import moonduck.calendar.simple.dao.MeetingDao;
 import moonduck.calendar.simple.entity.Meeting;
+import moonduck.calendar.simple.entity.Recurrence;
 import moonduck.calendar.simple.exception.MeetingDuplicationException;
 
 @RunWith(SpringRunner.class)
@@ -26,6 +28,9 @@ public class MeetingServiceTest {
 
 	@Mock
 	private MeetingDao mockDao;
+	
+	@Mock
+	private RecurrenceService mockRecurChecker;
 
 	@Test
 	public void 겹치지_않을_경우_addOrUpdate테스트() {
@@ -71,9 +76,20 @@ public class MeetingServiceTest {
 	
 	@Test
 	public void 기준일의_모든_회의_가져오기() {
-		List<Meeting> mockMeetings = mock(List.class);
+		List<Recurrence> mockRecurs = Arrays.asList(mock(Recurrence.class));
+		Meeting abandonedMeeting = mock(Meeting.class);
+		when(abandonedMeeting.getRecurrence()).thenReturn(mockRecurs);
+		when(mockRecurChecker.isOccur(any(LocalDate.class), eq(abandonedMeeting), any(Recurrence.class)))
+			.thenReturn(false);
+		
+		Meeting availableMeeting = mock(Meeting.class);
+		when(availableMeeting.getRecurrence()).thenReturn(mockRecurs);
+		when(mockRecurChecker.isOccur(any(LocalDate.class), eq(availableMeeting), any(Recurrence.class)))
+			.thenReturn(true);
+		
+		List<Meeting> mockMeetings = Arrays.asList(abandonedMeeting, availableMeeting);
 		when(mockDao.findMeetingByDate(any(LocalDate.class))).thenReturn(mockMeetings);
 		
-		assertTrue(mockMeetings == service.findMeetingByDate(LocalDate.now())); //LocalDate.now는 의미 없는 값임
+		assertEquals(Arrays.asList(availableMeeting), service.findMeetingByDate(LocalDate.now())); //LocalDate.now는 의미 없는 값임
 	}
 }

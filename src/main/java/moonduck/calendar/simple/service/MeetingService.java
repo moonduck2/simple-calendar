@@ -2,6 +2,7 @@ package moonduck.calendar.simple.service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import moonduck.calendar.simple.dao.MeetingDao;
 import moonduck.calendar.simple.entity.Meeting;
+import moonduck.calendar.simple.entity.Recurrence;
 import moonduck.calendar.simple.exception.MeetingDuplicationException;
 
 /**
@@ -19,6 +21,9 @@ import moonduck.calendar.simple.exception.MeetingDuplicationException;
 public class MeetingService {
 	@Autowired
 	private MeetingDao meetingDao;
+	
+	@Autowired
+	private RecurrenceService recurrenceService;
 	
 	@Transactional
 	public int addOrUpdateMeeting(Meeting meeting) {
@@ -35,6 +40,13 @@ public class MeetingService {
 	@Transactional
 	public List<Meeting> findMeetingByDate(LocalDate date) {
 		List<Meeting> allMeetings = meetingDao.findMeetingByDate(date);
-		return allMeetings;
+		return allMeetings.stream().filter(meeting -> {
+			for (Recurrence recur : meeting.getRecurrence()) {
+				if (recurrenceService.isOccur(date, meeting, recur)) {
+					return true;
+				}
+			}
+			return false;
+		}).collect(Collectors.toList());
 	}
 }
