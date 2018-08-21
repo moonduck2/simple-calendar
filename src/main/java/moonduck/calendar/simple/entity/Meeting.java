@@ -2,9 +2,11 @@ package moonduck.calendar.simple.entity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Table(name = "meeting")
@@ -30,4 +32,7 @@ public class Meeting {
 	
 	@Column(name = "meeting_room")
 	private String meetingRoom;
+	
+	@OneToMany(mappedBy = "meeting")
+	private List<Recurrence> recurrence;
 }
