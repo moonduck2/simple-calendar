@@ -3,15 +3,12 @@ package moonduck.calendar.simple.entity;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
-import moonduck.calendar.simple.entity.Recurrence.RecurrenceDto;
 
 @Table(name = "meeting")
 @Entity
