@@ -131,4 +131,16 @@ public class Meeting {
 		this.recurrence = recurrence;
 		return this;
 	}
+	
+	public Meeting update(Meeting value) {
+		this.startDate = value.startDate;
+		this.endDate = value.endDate;
+		this.startTime = value.startTime;
+		this.endTime = value.endTime;
+		this.meetingRoom = value.meetingRoom;
+		this.title = value.title;
+		this.content = value.content;
+		this.recurrence = value.recurrence;
+		return this;
+	}
 }

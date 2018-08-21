@@ -19,9 +19,20 @@ public interface MeetingDao extends CrudRepository<Meeting, Integer> {
 			@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, 
 			@Param("startTime") LocalTime startTime, @Param("endTime") LocalTime endTime);
 	
+	//TODO: unit test
 	@Query("select m from Meeting m where startDate <= :baseDate and endDate >= :baseDate")
 	List<Meeting> findMeetingByDate(@Param("baseDate") LocalDate baseDate);
-	
+
+	//TODO: unit test
 	@Query("select m from Meeting m where startDate <= :baseDate and endDate >= :baseDate and m.meetingRoom in :rooms")
 	List<Meeting> findMeetingByDate(@Param("baseDate") LocalDate baseDate, @Param("rooms") Collection<String> rooms);
+	
+	//TODO: unit test
+	@Query("select m from Meeting m where m.id != :id and m.meetingRoom = :room"
+			+ " and ((m.startDate between :startDate and :endDate or m.endDate between :startDate and :endDate)"
+			+ " and (m.startTime between :startTime and :endTime or endTime between :startTime and :endTime))")
+	List<Meeting> findAllPossibleDuplicateExceptId(
+			@Param("id") int id, @Param("room") String room, 
+			@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, 
+			@Param("startTime") LocalTime startTime, @Param("endTime") LocalTime endTime);
 }

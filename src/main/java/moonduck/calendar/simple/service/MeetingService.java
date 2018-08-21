@@ -32,11 +32,25 @@ public class MeetingService {
 		List<Meeting> possibleDuplicate = meetingDao.findAllPossibleDuplicate(meeting.getMeetingRoom(),
 				meeting.getStartDate(), meeting.getEndDate(), meeting.getStartTime(), meeting.getEndTime());
 		if (!possibleDuplicate.isEmpty()) {
-			throw new MeetingDuplicationException();
+			throw new MeetingDuplicationException(); //TODO ERROR 메세지
 		}
 		
 		Meeting meetingEntity = meetingDao.save(meeting);
 		return meetingEntity.getId();
+	}
+	
+	@Transactional
+	public int modifyMeeting(Meeting meeting) {
+		List<Meeting> possibleDuplicate = meetingDao.findAllPossibleDuplicateExceptId(
+				meeting.getId(), meeting.getMeetingRoom(),
+				meeting.getStartDate(), meeting.getEndDate(), meeting.getStartTime(), meeting.getEndTime());
+		if (possibleDuplicate.isEmpty()) {
+			meeting = meetingDao.save(meeting);
+		} else {
+			throw new MeetingDuplicationException();
+		} 
+		
+		return meeting.getId();
 	}
 	
 	@Transactional
