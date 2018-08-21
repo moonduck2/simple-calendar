@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -14,6 +15,10 @@ import moonduck.calendar.simple.entity.Recurrence.RecurrenceDto;
 @Table(name = "meeting")
 @Entity(name = "meeting")
 public class Meeting {
+	@Id
+	@Column
+	private int id;
+	
 	@Column
 	private LocalDate start;
 	
