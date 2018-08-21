@@ -43,6 +43,25 @@ public class MeetingDaoTest {
 
 	@Test
 	public void 날짜만_겹침() {
+		//07-31 ~ 09-01, 14:00 ~ 15:00
+		List<Meeting> possibleDuplicate = dao.findAllPossibleDuplicate("회의실1",
+				LocalDate.of(2018, 7, 31), LocalDate.of(2018, 9, 1), LocalTime.of(14, 0), LocalTime.of(15, 0));
 
+		assertEquals(0, possibleDuplicate.size());
+	}
+	
+	@Test
+	public void 시간만_겹침() {
+		//01-01 ~ 05-01, 09:00 ~ 10:00
+		List<Meeting> possibleDuplicate = dao.findAllPossibleDuplicate("회의실1",
+				LocalDate.of(2018, 1, 1), LocalDate.of(2018, 5, 1), LocalTime.of(9, 0), LocalTime.of(10, 0));
+		assertEquals(0, possibleDuplicate.size());
+	}
+	
+	@Test
+	public void 날짜_시간_모두_겹침() {
+		List<Meeting> possibleDuplicate = dao.findAllPossibleDuplicate("회의실1",
+				LocalDate.of(2018, 7, 31), LocalDate.of(2018, 9, 1), LocalTime.of(9, 0), LocalTime.of(10, 0));
+		assertEquals(1, possibleDuplicate.size());
 	}
 }
