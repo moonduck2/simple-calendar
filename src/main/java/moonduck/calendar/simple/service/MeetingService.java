@@ -36,7 +36,7 @@ public class MeetingService {
 		List<Meeting> possibleDuplicate = meetingDao.findAllPossibleDuplicate(meeting.getMeetingRoom(),
 				meeting.getStartDate(), meeting.getEndDate(), meeting.getStartTime(), meeting.getEndTime());
 		if (!possibleDuplicate.isEmpty()) {
-			throw new MeetingDuplicationException(); //TODO ERROR 메세지
+			throw new MeetingDuplicationException("일정이 겹칩니다.");
 		}
 		
 		Meeting meetingEntity = meetingDao.save(meeting);
@@ -53,7 +53,7 @@ public class MeetingService {
 		if (possibleDuplicate.isEmpty()) {
 			meeting = meetingDao.save(meeting);
 		} else {
-			throw new MeetingDuplicationException();
+			throw new MeetingDuplicationException("수정하려는 일정이 겹칩니다.");
 		} 
 		
 		return meeting.getId();

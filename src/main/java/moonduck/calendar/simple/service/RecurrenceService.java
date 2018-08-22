@@ -29,7 +29,7 @@ public class RecurrenceService {
 	public boolean isOccur(LocalDate date, Meeting meeting, Recurrence recurrence) {
 		RecurrenceHandler service = recurrenceServiceMap.get(recurrence.getType());
 		if (service == null) {
-			throw new NoSuitableRecurrenceCheckerException();
+			throw new NoSuitableRecurrenceCheckerException(recurrence.getType() + "에 해당하는 판단 로직이 없습니다.");
 		}
 		return service.isOccur(date, meeting, recurrence);
 	}
