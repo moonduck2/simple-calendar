@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.SortedSet;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,65 +33,68 @@ public class MeetingServiceTest {
 
 	@Mock
 	private MeetingDao mockDao;
-	
+
 	@Mock
 	private RecurrenceDao recurDao;
 
 	@Mock
 	private RecurrenceService mockRecurChecker;
 
+	@Mock
+	private CalendarUtilService util;
+
 	@Test
-	public void 겹치지_않을_경우_addOrUpdate테스트() {
-		List mockDuplicates = mock(List.class);
-		when(mockDuplicates.isEmpty()).thenReturn(true);
+	public void 선점에_성공했을_경우_addOrUpdate테스트() {
+		int expectedId = 1;
+		Meeting mockResultEntity = mock(Meeting.class); //meetingDao의 save결과 mock
+		when(mockResultEntity.getId()).thenReturn(expectedId); //addMeeting의 결과는 mockResultEntity의 ID인 1이 나와야 한다
+		when(mockDao.save(any())).thenReturn(mockResultEntity);
 
-		when(mockDao.findAllPossibleDuplicate(any(String.class), any(LocalDate.class), any(LocalDate.class),
-				any(LocalTime.class), any(LocalTime.class), any(Integer.class))).thenReturn(mockDuplicates);
+		//선점 성공을 의미하는 mock 설정(findDuplicatedPeriod은 중복된 시간대에 저장된 시간 순서의 자료구조를 리턴하므로)
+		SortedSet<Meeting> mockSortedResult = mock(SortedSet.class);
+		when(mockSortedResult.first()).thenReturn(mockResultEntity);
+		when(util.findDuplicatedPeriod(any(), any(), any())).thenReturn(mockSortedResult);
 
-		Meeting mockResultEntity = mock(Meeting.class);
-		when(mockResultEntity.getId()).thenReturn(1);
-
-		when(mockDao.save(any(Meeting.class))).thenReturn(mockResultEntity);
-
-		when(recurDao.save(any())).thenReturn(mock(Recurrence.class));
-		//mockMeeting, mockRecur의 getter의 값들은 의미없는 값임
+		//mockMeeting, mockRecur의 getter의 값들은 의미없는 값. 로직 내부에서 호출하므로 예외가 발생하지 않도록 임의의 값을 설정
 		RecurrenceDto mockRecur = mock(RecurrenceDto.class);
-		when(mockRecur.getDayOfWeek()).thenReturn(1);
+		when(mockRecur.getDayOfWeek()).thenReturn(5);
 
 		MeetingDto mockMeeting = mock(MeetingDto.class);
-		when(mockMeeting.getMeetingRoom()).thenReturn("회의실");
 		when(mockMeeting.getStartDate()).thenReturn(LocalDate.now());
-		when(mockMeeting.getEndDate()).thenReturn(LocalDate.now());
-		when(mockMeeting.getStartTime()).thenReturn(LocalTime.now());
-		when(mockMeeting.getEndTime()).thenReturn(LocalTime.now());
 		when(mockMeeting.getRecurrence()).thenReturn(mockRecur);
 		when(mockMeeting.toEntity(any(Boolean.class))).thenReturn(mock(Meeting.class));
 
-		assertEquals(1, service.addMeeting(mockMeeting));
+		assertEquals(expectedId, service.addMeeting(mockMeeting));
 	}
 
 	@Test(expected = MeetingDuplicationException.class)
-	public void 겹칠_경우_addOrUpdate_테스트() {
-		List mockDuplicates = mock(List.class);
-		when(mockDuplicates.isEmpty()).thenReturn(false);
+	public void 선점에_실패했을_경우_addOrUpdate_테스트() {
+		Meeting mockResultEntity = mock(Meeting.class); //meetingDao의 save결과 mock
+		when(mockResultEntity.getId()).thenReturn(1);
+		when(mockDao.save(any())).thenReturn(mockResultEntity);
 
-		when(mockDao.findAllPossibleDuplicate(any(String.class), any(LocalDate.class), any(LocalDate.class),
-				any(LocalTime.class), any(LocalTime.class), any(Integer.class))).thenReturn(mockDuplicates);
-		
-		//mockMeeting, mockRecur의 getter의 값들은 의미없는 값임
+		//id가 1인 회의가 선점에 실패하여 id가 3인 회의가 선점한 경우
+		Meeting firstReservedMeeting = mock(Meeting.class);
+		when(firstReservedMeeting.getId()).thenReturn(3);
+		SortedSet<Meeting> mockSortedResult = mock(SortedSet.class);
+		when(mockSortedResult.first()).thenReturn(firstReservedMeeting);
+		when(util.findDuplicatedPeriod(any(), any(), any())).thenReturn(mockSortedResult);
+
+		//mockMeeting, mockRecur의 getter의 값들은 의미없는 값. 로직 내부에서 호출하므로 예외가 발생하지 않도록 임의의 값을 설정
 		RecurrenceDto mockRecur = mock(RecurrenceDto.class);
-		when(mockRecur.getDayOfWeek()).thenReturn(1);
+		when(mockRecur.getDayOfWeek()).thenReturn(5);
 
 		MeetingDto mockMeeting = mock(MeetingDto.class);
-		when(mockMeeting.getMeetingRoom()).thenReturn("회의실");
 		when(mockMeeting.getStartDate()).thenReturn(LocalDate.now());
-		when(mockMeeting.getEndDate()).thenReturn(LocalDate.now());
-		when(mockMeeting.getStartTime()).thenReturn(LocalTime.now());
-		when(mockMeeting.getEndTime()).thenReturn(LocalTime.now());
 		when(mockMeeting.getRecurrence()).thenReturn(mockRecur);
 		when(mockMeeting.toEntity(any(Boolean.class))).thenReturn(mock(Meeting.class));
-
-		service.addMeeting(mockMeeting);
+		
+		try {
+			service.addMeeting(mockMeeting);
+			verify(mockDao).delete(eq(mockResultEntity));
+		} catch (MeetingDuplicationException ex) {
+			throw ex;
+		}
 	}
 
 	@Test

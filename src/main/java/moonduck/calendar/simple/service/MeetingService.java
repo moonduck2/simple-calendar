@@ -3,9 +3,8 @@ package moonduck.calendar.simple.service;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.SortedSet;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -38,26 +37,30 @@ public class MeetingService {
 	@Autowired
 	private RecurrenceService recurrenceService;
 	
-	@Transactional
+	@Autowired
+	private CalendarUtilService util;
+	
+	//동시에 회의실을 잡을 수 있기때문에 가장 먼저 잡은 것만 빼고 나머지는 지운다.
+	//회의 요청이 insert되었다가 delete되면 예외를 던져 회의실 선점 실패를 알린다.
 	public int addMeeting(MeetingDto meeting) {
 		setEndDateIfNotExist(meeting);
 		setRecurrenceIfNotExist(meeting);
 		
-		List<Meeting> possibleDuplicate = Collections.emptyList();
+		Meeting meetingEntity = saveMeeting(meeting, false);
+		List<Meeting> possibleDuplicate = meetingDao.findAllMeetingInDate(meeting.getMeetingRoom(), 
+				meeting.getStartDate(), meeting.getRecurrence().getDayOfWeek());
 		
-		if (meeting.getRecurrence() != null) {
-		  possibleDuplicate = meetingDao.findAllPossibleDuplicate(meeting.getMeetingRoom(),
-				meeting.getStartDate(), meeting.getEndDate(), meeting.getStartTime(), meeting.getEndTime(),
-				meeting.getRecurrence().getDayOfWeek());
-		} else {
-			possibleDuplicate = meetingDao.findAllPossibleDuplicate(meeting.getMeetingRoom(),
-					meeting.getStartDate(), meeting.getEndDate(), meeting.getStartTime(), meeting.getEndTime(),
-					meeting.getRecurrence().getDayOfWeek());
+		//시간이 겹치는 구간을 찾는다.
+		SortedSet<Meeting> duplicatedMeetings = util.findDuplicatedPeriod(
+				possibleDuplicate, meeting.getStartTime(), meeting.getEndTime());
+		
+		//겹치는 시간 중 요청된 값이 가장 오래된 값이면 선점 성공, 그렇지 않으면 선점 실패로 예외 throw
+		Meeting firstMeeting = duplicatedMeetings.first();
+		if (firstMeeting.getId().equals(meetingEntity.getId())) {
+			return meetingEntity.getId();
 		}
-		if (!possibleDuplicate.isEmpty()) {
-			throw new MeetingDuplicationException("일정이 겹칩니다.");
-		}
-		return saveMeeting(meeting, false).getId();
+		meetingDao.delete(meetingEntity);
+		throw new MeetingDuplicationException("이미 회의실이 선점되었습니다.");
 	}
 	
 	private Meeting saveMeeting(MeetingDto meeting, boolean isUpdate) {
@@ -68,7 +71,7 @@ public class MeetingService {
 			meetingEntity.setRecurrence(recurEntity);
 		}
 		
-		return meetingDao.save(meetingEntity);
+		return meetingDao.save(meetingEntity.setModifiedTimeToServerTime());
 	}
 	
 	@Transactional
@@ -104,7 +107,7 @@ public class MeetingService {
 	public void deleteMeeting(int meetingId) {
 		meetingDao.deleteById(meetingId);
 	}
-	
+	//TODO: start_date도 recurrence에 따라 바꾸도록 해야 함
 	private MeetingDto setRecurrenceIfNotExist(MeetingDto meeting) {
 		RecurrenceDto recur = meeting.getRecurrence();
 		if (recur == null) {

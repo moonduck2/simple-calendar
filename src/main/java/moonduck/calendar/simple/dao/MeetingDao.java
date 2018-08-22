@@ -5,6 +5,9 @@ import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 
+import javax.persistence.LockModeType;
+
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +15,7 @@ import org.springframework.data.repository.query.Param;
 import moonduck.calendar.simple.entity.Meeting;
 
 public interface MeetingDao extends CrudRepository<Meeting, Integer> {
+	
 	@Query("select m from Meeting m where m.meetingRoom = :room"
 			+ " and m.recurrence.dayOfWeek = :dayOfWeek"
 			+ " and (m.startDate between :startDate and :endDate or m.endDate between :startDate and :endDate)"
@@ -20,6 +24,12 @@ public interface MeetingDao extends CrudRepository<Meeting, Integer> {
 			@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, 
 			@Param("startTime") LocalTime startTime, @Param("endTime") LocalTime endTime,
 			@Param("dayOfWeek") int dayOfWeek);
+	
+	@Query("select m from Meeting m where m.meetingRoom = :room"
+			+ " and m.recurrence.dayOfWeek = :dayOfWeek"
+			+ " and m.endDate >= :startDate")
+	List<Meeting> findAllMeetingInDate(@Param("room") String room, 
+			@Param("startDate") LocalDate startDate, @Param("dayOfWeek") int dayOfWeek);
 	
 	//TODO: unit test
 	@Query("select m from Meeting m where startDate <= :baseDate and endDate >= :baseDate")

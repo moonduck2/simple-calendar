@@ -16,12 +16,10 @@ import javax.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
-import moonduck.calendar.simple.validator.annotation.ValidMeeting;
-
 @Table(name = "meeting", indexes = {
 	@Index(columnList = "start_date"), @Index(columnList = "end_date"),
 	@Index(columnList = "start_time"), @Index(columnList = "end_time"),
-	@Index(columnList = "meeting_room")
+	@Index(columnList = "meeting_room"), @Index(columnList = "modified_time")
 })
 @Entity
 public class Meeting {
@@ -56,6 +54,10 @@ public class Meeting {
 	@NotNull
 	@Column(name = "meeting_room", length = 20)
 	private String meetingRoom;
+	
+	@NotNull
+	@Column(name = "modified_time")
+	private long modifiedTime;
 	
 	@OneToOne
 	@JoinColumn(name = "recur_id")
@@ -141,6 +143,15 @@ public class Meeting {
 		return this;
 	}
 	
+	public long getModifiedTime() {
+		return modifiedTime;
+	}
+
+	public Meeting setModifiedTimeToServerTime() {
+		this.modifiedTime = System.nanoTime();
+		return this;
+	}
+
 	public Meeting update(Meeting value) {
 		this.startDate = value.startDate;
 		this.endDate = value.endDate;
