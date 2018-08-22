@@ -6,13 +6,17 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import moonduck.calendar.simple.enumeration.RecurrenceType;
 
-@Table(name = "recurrence")
+@Table(name = "recurrence", indexes = {
+	@Index(columnList = "type")
+})
 @Entity
 public class Recurrence {
 	@Id
@@ -30,7 +34,7 @@ public class Recurrence {
 	@Column(name = "day_of_week")
 	private Integer dayOfWeek;
 	
-	@ManyToOne
+	@OneToOne(mappedBy = "recurrence")
 	private Meeting meeting;
 
 	public Integer getId() {

@@ -2,13 +2,14 @@ package moonduck.calendar.simple.entity;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -17,7 +18,11 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 import moonduck.calendar.simple.validator.annotation.ValidMeeting;
 
-@Table(name = "meeting")
+@Table(name = "meeting", indexes = {
+	@Index(columnList = "start_date"), @Index(columnList = "end_date"),
+	@Index(columnList = "start_time"), @Index(columnList = "end_time"),
+	@Index(columnList = "meeting_room")
+})
 @Entity
 @ValidMeeting
 public class Meeting {
@@ -53,8 +58,9 @@ public class Meeting {
 	@Column(name = "meeting_room", length = 20)
 	private String meetingRoom;
 	
-	@OneToMany(mappedBy = "meeting")
-	private List<Recurrence> recurrence;
+	@OneToOne
+	@JoinColumn(name = "id")
+	private Recurrence recurrence;
 
 	public Integer getId() {
 		return id;
@@ -88,7 +94,7 @@ public class Meeting {
 		return meetingRoom;
 	}
 
-	public List<Recurrence> getRecurrence() {
+	public Recurrence getRecurrence() {
 		return recurrence;
 	}
 
@@ -127,7 +133,7 @@ public class Meeting {
 		return this;
 	}
 
-	public Meeting setRecurrence(List<Recurrence> recurrence) {
+	public Meeting setRecurrence(Recurrence recurrence) {
 		this.recurrence = recurrence;
 		return this;
 	}

@@ -77,14 +77,13 @@ public class MeetingServiceTest {
 	
 	@Test
 	public void 기준일의_모든_회의_가져오기() {
-		List<Recurrence> mockRecurs = Arrays.asList(mock(Recurrence.class));
 		Meeting abandonedMeeting = mock(Meeting.class);
-		when(abandonedMeeting.getRecurrence()).thenReturn(mockRecurs);
+		when(abandonedMeeting.getRecurrence()).thenReturn(mock(Recurrence.class));
 		when(mockRecurChecker.isOccur(any(LocalDate.class), eq(abandonedMeeting), any(Recurrence.class)))
 			.thenReturn(false);
 		
 		Meeting availableMeeting = mock(Meeting.class);
-		when(availableMeeting.getRecurrence()).thenReturn(mockRecurs);
+		when(availableMeeting.getRecurrence()).thenReturn(null);
 		when(mockRecurChecker.isOccur(any(LocalDate.class), eq(availableMeeting), any(Recurrence.class)))
 			.thenReturn(true);
 		

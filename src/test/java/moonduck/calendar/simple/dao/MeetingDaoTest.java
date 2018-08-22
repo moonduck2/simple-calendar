@@ -24,19 +24,24 @@ import moonduck.calendar.simple.enumeration.RecurrenceType;
 public class MeetingDaoTest {
 	@Autowired
 	private MeetingDao dao;
+	
+	@Autowired
+	private RecurrenceDao recurDao;
 
 	@Before
 	public void init() {
 		//07-01 ~ 08-01, 09:00 ~ 11:00, 수요일 반복
+		Recurrence recurEntity = recurDao.save(new Recurrence()
+				.setType(RecurrenceType.ONCE_A_WEEK)
+				.setDayOfWeek(DayOfWeek.WEDNESDAY.getValue()));
+				
 		dao.save(new Meeting()
 				.setMeetingRoom("회의실1")
 				.setStartDate(LocalDate.of(2018, 7, 1))
 				.setEndDate(LocalDate.of(2018, 9, 1))
 				.setStartTime(LocalTime.of(9, 0))
 				.setEndTime(LocalTime.of(11, 0))
-				.setRecurrence(Arrays.asList(
-						new Recurrence().setType(RecurrenceType.ONCE_A_WEEK)
-							.setDayOfWeek(DayOfWeek.WEDNESDAY.getValue()))));
+				.setRecurrence(recurEntity));
 	}
 
 	@Test

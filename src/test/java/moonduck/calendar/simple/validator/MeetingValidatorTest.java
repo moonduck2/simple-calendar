@@ -8,6 +8,8 @@ import java.time.LocalTime;
 import org.junit.Test;
 
 import moonduck.calendar.simple.entity.Meeting;
+import moonduck.calendar.simple.entity.Recurrence;
+import moonduck.calendar.simple.enumeration.RecurrenceType;
 
 public class MeetingValidatorTest {
 
@@ -23,7 +25,7 @@ public class MeetingValidatorTest {
 	}
 	
 	@Test
-	public void end가_null이면_invalid() {
+	public void 반복없이_end가_null이면_invalid() {
 		Meeting invalidMeeting = new Meeting()
 			.setStartDate(LocalDate.now())
 			.setStartTime(LocalTime.of(0, 0))

@@ -60,10 +60,9 @@ public class MeetingService {
 				: meetingDao.findMeetingByDate(date, rooms);
 				
 		return allMeetings.stream().filter(meeting -> {
-			for (Recurrence recur : meeting.getRecurrence()) {
-				if (recurrenceService.isOccur(date, meeting, recur)) {
-					return true;
-				}
+			Recurrence recur = meeting.getRecurrence();
+			if (recur == null || recurrenceService.isOccur(date, meeting, recur)) {
+				return true;
 			}
 			return false;
 		}).collect(Collectors.toList());

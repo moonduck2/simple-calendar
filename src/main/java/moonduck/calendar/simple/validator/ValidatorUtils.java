@@ -16,7 +16,7 @@ public final class ValidatorUtils {
 		return start.isBefore(end) || start.isEqual(end); //1회성 예약의 경우 start와 end가 같을 수 있음
 	}
 	//30분 단위만 유효
-	private static boolean isValidMeetingMinutes(int minutes) {
+	public static boolean isValidMeetingMinutes(int minutes) {
 		return minutes == 0 || minutes == 30;
 	}
 	
@@ -27,10 +27,7 @@ public final class ValidatorUtils {
 		if (endTime == null) {
 			return false;
 		}
-		if (!ValidatorUtils.isValidMeetingMinutes(startTime.getMinute()) ||
-				!ValidatorUtils.isValidMeetingMinutes(endTime.getMinute())) {
-			return false;
-		}
+
 		//시간은 반드시 endTime이 startTime보다 커야 함
 		return startTime.isBefore(endTime);
 	}
