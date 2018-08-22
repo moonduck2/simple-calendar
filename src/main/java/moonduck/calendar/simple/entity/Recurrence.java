@@ -7,7 +7,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -57,18 +56,23 @@ public class Recurrence {
 		return meeting;
 	}
 
-	public Recurrence setType(RecurrenceType type) {
-		this.type = type;
-		return this;
-	}
-
-	public Recurrence setCount(int count) {
+	public Recurrence setCount(Integer count) {
 		this.count = count;
 		return this;
 	}
 
-	public Recurrence setDayOfWeek(int dayOfWeek) {
+	public Recurrence setDayOfWeek(Integer dayOfWeek) {
 		this.dayOfWeek = dayOfWeek;
+		return this;
+	}
+
+	public Recurrence setId(Integer id) {
+		this.id = id;
+		return this;
+	}
+
+	public Recurrence setType(RecurrenceType type) {
+		this.type = type;
 		return this;
 	}
 

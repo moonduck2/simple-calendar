@@ -24,7 +24,6 @@ import moonduck.calendar.simple.validator.annotation.ValidMeeting;
 	@Index(columnList = "meeting_room")
 })
 @Entity
-@ValidMeeting
 public class Meeting {
 	@Id
 	@GeneratedValue
@@ -59,7 +58,7 @@ public class Meeting {
 	private String meetingRoom;
 	
 	@OneToOne
-	@JoinColumn(name = "id")
+	@JoinColumn(name = "recur_id")
 	private Recurrence recurrence;
 
 	public Integer getId() {
@@ -96,6 +95,10 @@ public class Meeting {
 
 	public Recurrence getRecurrence() {
 		return recurrence;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public Meeting setStartDate(LocalDate start) {

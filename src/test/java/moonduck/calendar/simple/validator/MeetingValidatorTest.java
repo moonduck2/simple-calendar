@@ -7,15 +7,13 @@ import java.time.LocalTime;
 
 import org.junit.Test;
 
-import moonduck.calendar.simple.entity.Meeting;
-import moonduck.calendar.simple.entity.Recurrence;
-import moonduck.calendar.simple.enumeration.RecurrenceType;
+import moonduck.calendar.simple.dto.MeetingDto;
 
 public class MeetingValidatorTest {
 
 	@Test
 	public void start가_null이면_invalid() {
-		Meeting invalidMeeting = new Meeting()
+		MeetingDto invalidMeeting = new MeetingDto()
 			.setEndDate(LocalDate.now())
 			.setStartTime(LocalTime.of(0, 0))
 			.setEndTime(LocalTime.of(1, 0))
@@ -26,7 +24,7 @@ public class MeetingValidatorTest {
 	
 	@Test
 	public void 반복없이_end가_null이면_invalid() {
-		Meeting invalidMeeting = new Meeting()
+		MeetingDto invalidMeeting = new MeetingDto()
 			.setStartDate(LocalDate.now())
 			.setStartTime(LocalTime.of(0, 0))
 			.setEndTime(LocalTime.of(1, 0))
@@ -37,7 +35,7 @@ public class MeetingValidatorTest {
 	
 	@Test
 	public void startTime이_null이면_invalid() {
-		Meeting invalidMeeting = new Meeting()
+		MeetingDto invalidMeeting = new MeetingDto()
 			.setStartDate(LocalDate.of(2018, 1, 1))
 			.setEndDate(LocalDate.of(2018, 2, 1))
 			.setEndTime(LocalTime.of(1, 0))
@@ -48,7 +46,7 @@ public class MeetingValidatorTest {
 	
 	@Test
 	public void endTime이_null이면_invalid() {
-		Meeting invalidMeeting = new Meeting()
+		MeetingDto invalidMeeting = new MeetingDto()
 			.setStartDate(LocalDate.of(2018, 1, 1))
 			.setEndDate(LocalDate.of(2018, 2, 1))
 			.setStartTime(LocalTime.of(1, 0))
@@ -59,7 +57,7 @@ public class MeetingValidatorTest {
 	
 	@Test
 	public void 회의실이_null이면_invalid() {
-		Meeting invalidMeeting = new Meeting()
+		MeetingDto invalidMeeting = new MeetingDto()
 			.setStartDate(LocalDate.of(2018, 1, 1))
 			.setEndDate(LocalDate.of(2018, 2, 1))
 			.setStartTime(LocalTime.of(0, 0))
@@ -70,7 +68,7 @@ public class MeetingValidatorTest {
 	
 	@Test
 	public void 회의실이_빈_문자열이면_invalid() {
-		Meeting invalidMeeting = new Meeting()
+		MeetingDto invalidMeeting = new MeetingDto()
 			.setStartDate(LocalDate.of(2018, 1, 1))
 			.setEndDate(LocalDate.of(2018, 2, 1))
 			.setStartTime(LocalTime.of(0, 0))
@@ -82,7 +80,7 @@ public class MeetingValidatorTest {
 	
 	@Test
 	public void 회의실이_공백_문자열이면_invalid() {
-		Meeting invalidMeeting = new Meeting()
+		MeetingDto invalidMeeting = new MeetingDto()
 			.setStartDate(LocalDate.of(2018, 1, 1))
 			.setEndDate(LocalDate.of(2018, 2, 1))
 			.setStartTime(LocalTime.of(0, 0))
@@ -94,7 +92,7 @@ public class MeetingValidatorTest {
 	
 	@Test
 	public void startDate가_endDate보다_미래면_invalid() {
-		Meeting invalidMeeting = new Meeting()
+		MeetingDto invalidMeeting = new MeetingDto()
 			.setStartDate(LocalDate.of(2018, 2, 1))
 			.setEndDate(LocalDate.of(2018, 1, 1))
 			.setStartTime(LocalTime.of(0, 0))
@@ -106,7 +104,7 @@ public class MeetingValidatorTest {
 	
 	@Test
 	public void startTime이_endTime보다_미래면_invalid() {
-		Meeting invalidMeeting = new Meeting()
+		MeetingDto invalidMeeting = new MeetingDto()
 			.setStartDate(LocalDate.of(2018, 1, 1))
 			.setEndDate(LocalDate.of(2018, 2, 1))
 			.setStartTime(LocalTime.of(1, 0))
@@ -118,7 +116,7 @@ public class MeetingValidatorTest {
 	
 	@Test
 	public void startTime과_endTime이_같으면_invalid() {
-		Meeting invalidMeeting = new Meeting()
+		MeetingDto invalidMeeting = new MeetingDto()
 			.setStartDate(LocalDate.of(2018, 1, 1))
 			.setEndDate(LocalDate.of(2018, 2, 1))
 			.setStartTime(LocalTime.of(1, 0))
@@ -130,7 +128,7 @@ public class MeetingValidatorTest {
 	
 	@Test
 	public void startTime이_30분_단위가_아니면_invalid() {
-		Meeting invalidMeeting = new Meeting()
+		MeetingDto invalidMeeting = new MeetingDto()
 			.setStartDate(LocalDate.of(2018, 1, 1))
 			.setEndDate(LocalDate.of(2018, 2, 1))
 			.setStartTime(LocalTime.of(0, 10))
@@ -142,7 +140,7 @@ public class MeetingValidatorTest {
 	
 	@Test
 	public void endTime이_30분_단위가_아니면_invalid() {
-		Meeting invalidMeeting = new Meeting()
+		MeetingDto invalidMeeting = new MeetingDto()
 			.setStartDate(LocalDate.of(2018, 1, 1))
 			.setEndDate(LocalDate.of(2018, 2, 1))
 			.setStartTime(LocalTime.of(0, 0))

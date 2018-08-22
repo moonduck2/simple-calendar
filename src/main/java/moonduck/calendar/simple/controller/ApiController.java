@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import moonduck.calendar.simple.dto.MeetingDto;
 import moonduck.calendar.simple.entity.Meeting;
 import moonduck.calendar.simple.service.MeetingService;
 
@@ -35,12 +36,12 @@ public class ApiController {
 	}
 	
 	@PostMapping
-	public int newMeeting(@RequestBody @Valid Meeting meeting) {
+	public int newMeeting(@RequestBody @Valid MeetingDto meeting) {
 		return meetingService.addMeeting(meeting);
 	}
 	
 	@PutMapping
-	public int modifyMeeting(@RequestBody @Valid Meeting meeting) {
+	public int modifyMeeting(@RequestBody @Valid MeetingDto meeting) {
 		return meetingService.addMeeting(meeting);
 	}
 	

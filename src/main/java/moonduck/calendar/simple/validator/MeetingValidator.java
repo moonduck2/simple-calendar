@@ -8,12 +8,12 @@ import javax.validation.ConstraintValidatorContext;
 
 import org.springframework.util.StringUtils;
 
-import moonduck.calendar.simple.entity.Meeting;
+import moonduck.calendar.simple.dto.MeetingDto;
 import moonduck.calendar.simple.validator.annotation.ValidMeeting;
 
-public class MeetingValidator implements ConstraintValidator<ValidMeeting, Meeting> {
+public class MeetingValidator implements ConstraintValidator<ValidMeeting, MeetingDto> {
 	@Override
-	public boolean isValid(Meeting value, ConstraintValidatorContext context) {
+	public boolean isValid(MeetingDto value, ConstraintValidatorContext context) {
 		LocalDate startDate = value.getStartDate();
 		if (startDate == null) {
 			return false;
