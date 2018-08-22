@@ -4,9 +4,14 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.SortedSet;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.transaction.Transaction;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,9 +45,19 @@ public class MeetingService {
 	@Autowired
 	private CalendarUtilService util;
 	
+	@Autowired
+	private EntityManager entityManager;
+	
 	//동시에 회의실을 잡을 수 있기때문에 가장 먼저 잡은 것만 빼고 나머지는 지운다.
 	//회의 요청이 insert되었다가 delete되면 예외를 던져 회의실 선점 실패를 알린다.
 	public int addMeeting(MeetingDto meeting) {
+		return addMeeting(meeting, meetingEntity ->  {
+			meetingEntity.setEnabled(true);
+			return meetingEntity.getId();
+		});
+	}
+	
+	private int addMeeting(MeetingDto meeting, Function<Meeting, Integer> successFunc) {
 		util.normalizeMeeting(meeting);
 		
 		Meeting meetingEntity = saveMeeting(meeting, false);
@@ -57,7 +72,7 @@ public class MeetingService {
 		//겹치는 시간 중 요청된 값이 가장 오래된 값이면 선점 성공, 그렇지 않으면 선점 실패로 예외 throw
 		Meeting firstMeeting = duplicatedMeetings.first();
 		if (firstMeeting.getId().equals(meetingEntity.getId())) {
-			return meetingEntity.getId();
+			return successFunc.apply(meetingEntity);
 		}
 		meetingDao.delete(meetingEntity);
 		throw new MeetingDuplicationException("이미 회의실이 선점되었습니다.");
@@ -74,17 +89,23 @@ public class MeetingService {
 		return meetingDao.save(meetingEntity.setModifiedTimeToServerTime());
 	}
 	
-	@Transactional
+	/**
+	 * 메소드명은 modify이지만 실제로는 새로 회의를 만들고 기존 것을 삭제하는 과정을 거친다.
+	 * 먼저 변경되는 시간으로 새로 만들어보고 성공할 경우 기존 것을 삭제, 실패할 경우 예외를 던진다.
+	 * @param meeting 변경될 회의 날짜/시간 정보를 담은 객체
+	 * @return 주어진 시간으로 새로 생성된 회의의 ID
+	 */
 	public int modifyMeeting(MeetingDto meeting) {
 		util.normalizeMeeting(meeting);
+		Meeting oldMeetingEntity = meetingDao.findById(meeting.getId()).orElseThrow(() -> new MeetingNotFoundException(meeting.getId()));
 		
-		List<Meeting> possibleDuplicate = meetingDao.findAllPossibleDuplicateExceptId(
-				meeting.getId(), meeting.getMeetingRoom(),
-				meeting.getStartDate(), meeting.getEndDate(), meeting.getStartTime(), meeting.getEndTime());
-		if (!possibleDuplicate.isEmpty()) {
-			throw new MeetingDuplicationException("수정하려는 일정이 겹칩니다.");
-		} 
-		return saveMeeting(meeting, true).getId();
+		return addMeeting(meeting, newMeetingEntity -> {
+			EntityTransaction tx = entityManager.getTransaction();
+			newMeetingEntity.setEnabled(true);
+			meetingDao.delete(oldMeetingEntity);
+			tx.commit();
+			return newMeetingEntity.getId();
+		});
 	}
 	
 	//TODO : 임시로 넣은 회의도 같이 나올 수 있으므로 중복된 회의는 선점한 회의만 빼고 제거하자

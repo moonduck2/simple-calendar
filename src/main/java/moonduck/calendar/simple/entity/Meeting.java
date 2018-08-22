@@ -19,7 +19,8 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 @Table(name = "meeting", indexes = {
 	@Index(columnList = "start_date"), @Index(columnList = "end_date"),
 	@Index(columnList = "start_time"), @Index(columnList = "end_time"),
-	@Index(columnList = "meeting_room"), @Index(columnList = "modified_time")
+	@Index(columnList = "meeting_room"), @Index(columnList = "modified_time"),
+	@Index(columnList = "enabled")
 })
 @Entity
 public class Meeting {
@@ -54,6 +55,9 @@ public class Meeting {
 	@NotNull
 	@Column(name = "meeting_room", length = 20)
 	private String meetingRoom;
+	
+	@Column(name = "enabled")
+	private boolean enabled;
 	
 	@NotNull
 	@Column(name = "modified_time")
@@ -101,6 +105,15 @@ public class Meeting {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public Meeting setEnabled(boolean enabled) {
+		this.enabled = enabled;
+		return this;
 	}
 
 	public Meeting setStartDate(LocalDate start) {
