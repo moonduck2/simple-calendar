@@ -1,5 +1,6 @@
 package moonduck.calendar.simple.service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
@@ -15,6 +16,7 @@ import moonduck.calendar.simple.dao.MeetingDao;
 import moonduck.calendar.simple.entity.Meeting;
 import moonduck.calendar.simple.entity.Recurrence;
 import moonduck.calendar.simple.exception.MeetingDuplicationException;
+import moonduck.calendar.simple.util.RecurrenceCalculator;
 
 /**
  * 회의실 예약에 관한 트랜잭션 처리를 총괄한다. 
@@ -29,6 +31,8 @@ public class MeetingService {
 	
 	@Transactional
 	public int addMeeting(Meeting meeting) {
+		calcEndDate(meeting);
+		
 		List<Meeting> possibleDuplicate = meetingDao.findAllPossibleDuplicate(meeting.getMeetingRoom(),
 				meeting.getStartDate(), meeting.getEndDate(), meeting.getStartTime(), meeting.getEndTime());
 		if (!possibleDuplicate.isEmpty()) {
@@ -41,6 +45,8 @@ public class MeetingService {
 	
 	@Transactional
 	public int modifyMeeting(Meeting meeting) {
+		calcEndDate(meeting);
+		
 		List<Meeting> possibleDuplicate = meetingDao.findAllPossibleDuplicateExceptId(
 				meeting.getId(), meeting.getMeetingRoom(),
 				meeting.getStartDate(), meeting.getEndDate(), meeting.getStartTime(), meeting.getEndTime());
@@ -71,5 +77,15 @@ public class MeetingService {
 	@Transactional
 	public void deleteMeeting(int meetingId) {
 		meetingDao.deleteById(meetingId);
+	}
+	
+	private Meeting calcEndDate(Meeting meeting) {
+		Recurrence recur = meeting.getRecurrence();
+		if (recur == null || meeting.getEndDate() != null) {
+			return meeting;
+		}
+		meeting.setEndDate(RecurrenceCalculator.calcLastDate(
+				meeting.getStartDate(), DayOfWeek.of(recur.getDayOfWeek()), recur.getCount()));
+		return meeting;
 	}
 }
