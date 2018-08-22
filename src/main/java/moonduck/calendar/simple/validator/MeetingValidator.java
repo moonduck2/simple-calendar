@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
 
 import moonduck.calendar.simple.dto.MeetingDto;
 import moonduck.calendar.simple.dto.RecurrenceDto;
-import moonduck.calendar.simple.util.RecurrenceCalculator;
+import moonduck.calendar.simple.util.TemporalCalculator;
 import moonduck.calendar.simple.validator.annotation.ValidMeeting;
 
 public class MeetingValidator implements ConstraintValidator<ValidMeeting, MeetingDto> {
@@ -31,7 +31,7 @@ public class MeetingValidator implements ConstraintValidator<ValidMeeting, Meeti
 		} else if (endDate != null) {
 			//반복횟수와 endDate가 맞지 않으면 잘못된 요청
 			RecurrenceDto recurrence = value.getRecurrence();
-			LocalDate minEndDate = RecurrenceCalculator.calcLastDate(startDate, DayOfWeek.of(recurrence.getDayOfWeek()), recurrence.getCount());
+			LocalDate minEndDate = TemporalCalculator.calcLastDate(startDate, DayOfWeek.of(recurrence.getDayOfWeek()), recurrence.getCount());
 			if (minEndDate.isAfter(endDate)) {
 				return false;
 			}

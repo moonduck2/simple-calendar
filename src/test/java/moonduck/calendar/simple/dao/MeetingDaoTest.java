@@ -19,6 +19,7 @@ import moonduck.calendar.simple.entity.Meeting;
 import moonduck.calendar.simple.entity.Recurrence;
 import moonduck.calendar.simple.enumeration.RecurrenceType;
 
+//TODO: 필요없는 테스트 제거(findDuplicatedPossible이라던지...)
 @RunWith(SpringRunner.class)
 @DataJpaTest
 public class MeetingDaoTest {

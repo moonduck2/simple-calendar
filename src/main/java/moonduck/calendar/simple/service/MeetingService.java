@@ -21,7 +21,7 @@ import moonduck.calendar.simple.entity.Meeting;
 import moonduck.calendar.simple.entity.Recurrence;
 import moonduck.calendar.simple.enumeration.RecurrenceType;
 import moonduck.calendar.simple.exception.MeetingDuplicationException;
-import moonduck.calendar.simple.util.RecurrenceCalculator;
+import moonduck.calendar.simple.util.TemporalCalculator;
 
 /**
  * 회의실 예약에 관한 트랜잭션 처리를 총괄한다. 
@@ -43,10 +43,10 @@ public class MeetingService {
 	//동시에 회의실을 잡을 수 있기때문에 가장 먼저 잡은 것만 빼고 나머지는 지운다.
 	//회의 요청이 insert되었다가 delete되면 예외를 던져 회의실 선점 실패를 알린다.
 	public int addMeeting(MeetingDto meeting) {
-		setEndDateIfNotExist(meeting);
-		setRecurrenceIfNotExist(meeting);
+		util.normalizeMeeting(meeting);
 		
 		Meeting meetingEntity = saveMeeting(meeting, false);
+		//TODO : 처음부터 겹치는 시간대만 가져오자
 		List<Meeting> possibleDuplicate = meetingDao.findAllMeetingInDate(meeting.getMeetingRoom(), 
 				meeting.getStartDate(), meeting.getRecurrence().getDayOfWeek());
 		
@@ -76,8 +76,7 @@ public class MeetingService {
 	
 	@Transactional
 	public int modifyMeeting(MeetingDto meeting) {
-		setEndDateIfNotExist(meeting);
-		setRecurrenceIfNotExist(meeting);
+		util.normalizeMeeting(meeting);
 		
 		List<Meeting> possibleDuplicate = meetingDao.findAllPossibleDuplicateExceptId(
 				meeting.getId(), meeting.getMeetingRoom(),
@@ -88,6 +87,7 @@ public class MeetingService {
 		return saveMeeting(meeting, true).getId();
 	}
 	
+	//TODO : 임시로 넣은 회의도 같이 나올 수 있으므로 중복된 회의는 선점한 회의만 빼고 제거하자
 	@Transactional
 	public List<Meeting> findMeetingByDate(LocalDate date, Collection<String> rooms) {
 		List<Meeting> allMeetings = CollectionUtils.isEmpty(rooms) 
@@ -106,27 +106,5 @@ public class MeetingService {
 	@Transactional
 	public void deleteMeeting(int meetingId) {
 		meetingDao.deleteById(meetingId);
-	}
-	//TODO: start_date도 recurrence에 따라 바꾸도록 해야 함
-	private MeetingDto setRecurrenceIfNotExist(MeetingDto meeting) {
-		RecurrenceDto recur = meeting.getRecurrence();
-		if (recur == null) {
-			//문제의 단순화를 위해 반복이 없는 경우는 1회 반복으로 처리한다.
-			recur = new RecurrenceDto().setType(RecurrenceType.ONCE_A_WEEK)
-				.setCount(1)
-				//반복이 없는 경우는 startDate와 endDate가 같으므로 임의로 startDate의 요일을 선택
-				.setDayOfWeek(meeting.getStartDate().getDayOfWeek().getValue());
-			meeting.setRecurrence(recur);
-		}
-		return meeting;
-	}
-	private MeetingDto setEndDateIfNotExist(MeetingDto meeting) {
-		RecurrenceDto recur = meeting.getRecurrence();
-		if (recur == null || meeting.getEndDate() != null) {
-			return meeting;
-		}
-		meeting.setEndDate(RecurrenceCalculator.calcLastDate(
-				meeting.getStartDate(), DayOfWeek.of(recur.getDayOfWeek()), recur.getCount()));
-		return meeting;
 	}
 }
