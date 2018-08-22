@@ -110,8 +110,10 @@ public class MeetingService {
 		if (recur == null) {
 			//문제의 단순화를 위해 반복이 없는 경우는 1회 반복으로 처리한다.
 			recur = new RecurrenceDto().setType(RecurrenceType.ONCE_A_WEEK)
+				.setCount(1)
 				//반복이 없는 경우는 startDate와 endDate가 같으므로 임의로 startDate의 요일을 선택
 				.setDayOfWeek(meeting.getStartDate().getDayOfWeek().getValue());
+			meeting.setRecurrence(recur);
 		}
 		return meeting;
 	}

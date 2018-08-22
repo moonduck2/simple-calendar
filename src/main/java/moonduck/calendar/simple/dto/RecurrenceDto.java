@@ -24,7 +24,11 @@ public class RecurrenceDto {
 	public int getDayOfWeek() {
 		return dayOfWeek;
 	}
-
+	
+	public RecurrenceDto setCount(Integer count) {
+		this.count = count;
+		return this;
+	}
 	public RecurrenceDto setType(RecurrenceType type) {
 		this.type = type;
 		return this;
