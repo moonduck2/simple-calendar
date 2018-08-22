@@ -23,7 +23,7 @@ import moonduck.calendar.simple.entity.Meeting;
 import moonduck.calendar.simple.service.MeetingService;
 
 @RestController
-@RequestMapping("/meeting")
+@RequestMapping("/api/meeting")
 public class ApiController {
 	@Autowired
 	private MeetingService meetingService;
