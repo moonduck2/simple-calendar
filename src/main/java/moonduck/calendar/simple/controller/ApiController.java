@@ -30,7 +30,7 @@ public class ApiController {
 	private MeetingService meetingService;
 	
 	@GetMapping
-	public List<Meeting> getMeetings(@RequestParam @DateTimeFormat(iso = ISO.DATE) LocalDate date, 
+	public List<MeetingDto> getMeetings(@RequestParam @DateTimeFormat(iso = ISO.DATE) LocalDate date, 
 			@RequestParam(required = false) Collection<String> rooms) {
 		return meetingService.findMeetingByDate(date, rooms);
 	}

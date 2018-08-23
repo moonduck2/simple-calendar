@@ -100,11 +100,15 @@ public class MeetingServiceTest {
 	//mockDao의 쿼리 수행 결과를 그대로 리턴하는지 테스트
 	@Test
 	public void 기준일의_모든_회의_가져오기() {
-		List<Meeting> mockMeetings = mock(List.class);
+		MeetingDto mockMeeting = mock(MeetingDto.class);
+		Meeting mockMeetingEntity = mock(Meeting.class);
+		when(mockMeetingEntity.toDto()).thenReturn(mockMeeting);
+		
+		List<Meeting> mockMeetings = Arrays.asList(mockMeetingEntity);
 		when(mockDao.findMeetingByDate(any(LocalDate.class), any(Integer.class))).thenReturn(mockMeetings);
 
 		//LocalDate.now는 의미 없는 값임, 회의실을 지정하지 않을 경우 모든 회의실의 일정을 조회함
-		assertEquals(mockMeetings, 
+		assertEquals(Arrays.asList(mockMeeting), 
 				service.findMeetingByDate(LocalDate.now(), Collections.emptyList()));
 	}
 }

@@ -16,6 +16,8 @@ import javax.validation.constraints.NotNull;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
+import moonduck.calendar.simple.dto.MeetingDto;
+
 @Table(name = "meeting", indexes = {
 	@Index(columnList = "start_date"), @Index(columnList = "end_date"),
 	@Index(columnList = "start_time"), @Index(columnList = "end_time"),
@@ -165,6 +167,17 @@ public class Meeting {
 		return this;
 	}
 
+	public MeetingDto toDto() {
+		return new MeetingDto()
+				.setStartDate(startDate)
+				.setEndDate(endDate)
+				.setStartTime(startTime)
+				.setEndTime(endTime)
+				.setTitle(title)
+				.setContent(content)
+				.setMeetingRoom(meetingRoom)
+				.setRecurrence(recurrence.toDto());
+	}
 	public Meeting update(Meeting value) {
 		this.startDate = value.startDate;
 		this.endDate = value.endDate;

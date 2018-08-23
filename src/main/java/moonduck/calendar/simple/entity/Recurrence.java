@@ -11,6 +11,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import moonduck.calendar.simple.dto.RecurrenceDto;
 import moonduck.calendar.simple.enumeration.RecurrenceType;
 
 @Table(name = "recurrence", indexes = {
@@ -79,5 +80,12 @@ public class Recurrence {
 	public Recurrence setMeeting(Meeting meeting) {
 		this.meeting = meeting;
 		return this;
+	}
+	
+	public RecurrenceDto toDto() {
+		return new RecurrenceDto()
+				.setType(type)
+				.setCount(count)
+				.setDayOfWeek(dayOfWeek);
 	}
 }

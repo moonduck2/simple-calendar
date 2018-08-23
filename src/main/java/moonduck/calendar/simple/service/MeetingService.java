@@ -1,17 +1,14 @@
 package moonduck.calendar.simple.service;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.SortedSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
-import javax.transaction.Transaction;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +21,7 @@ import moonduck.calendar.simple.dto.MeetingDto;
 import moonduck.calendar.simple.dto.RecurrenceDto;
 import moonduck.calendar.simple.entity.Meeting;
 import moonduck.calendar.simple.entity.Recurrence;
-import moonduck.calendar.simple.enumeration.RecurrenceType;
 import moonduck.calendar.simple.exception.MeetingDuplicationException;
-import moonduck.calendar.simple.util.TemporalCalculator;
 
 /**
  * 회의실 예약에 관한 트랜잭션 처리를 총괄한다. 
@@ -40,9 +35,6 @@ public class MeetingService {
 	private RecurrenceDao recurDao;
 	
 	@Autowired
-	private RecurrenceService recurrenceService;
-	
-	@Autowired
 	private CalendarUtilService util;
 	
 	@Autowired
@@ -50,6 +42,7 @@ public class MeetingService {
 	
 	//동시에 회의실을 잡을 수 있기때문에 가장 먼저 잡은 것만 빼고 나머지는 지운다.
 	//회의 요청이 insert되었다가 delete되면 예외를 던져 회의실 선점 실패를 알린다.
+	@Transactional
 	public int addMeeting(MeetingDto meeting) {
 		return addMeeting(meeting, meetingEntity ->  {
 			meetingEntity.setEnabled(true);
@@ -95,6 +88,7 @@ public class MeetingService {
 	 * @param meeting 변경될 회의 날짜/시간 정보를 담은 객체
 	 * @return 주어진 시간으로 새로 생성된 회의의 ID
 	 */
+	@Transactional
 	public int modifyMeeting(MeetingDto meeting) {
 		util.normalizeMeeting(meeting);
 		Meeting oldMeetingEntity = meetingDao.findById(meeting.getId()).orElseThrow(() -> new MeetingNotFoundException(meeting.getId()));
@@ -114,13 +108,12 @@ public class MeetingService {
 	 * @param rooms 회의실
 	 * @return 회의실 일정 리스트
 	 */
-	@Transactional
-	public List<Meeting> findMeetingByDate(LocalDate date, Collection<String> rooms) {
+	public List<MeetingDto> findMeetingByDate(LocalDate date, Collection<String> rooms) {
 		List<Meeting> allMeetings = CollectionUtils.isEmpty(rooms) 
 				? meetingDao.findMeetingByDate(date, date.getDayOfWeek().getValue())
 				: meetingDao.findMeetingByDate(date, date.getDayOfWeek().getValue(), rooms);
 				
-		return allMeetings;
+		return allMeetings.stream().map(entity -> entity.toDto()).collect(Collectors.toList());
 	}
 	
 	@Transactional
