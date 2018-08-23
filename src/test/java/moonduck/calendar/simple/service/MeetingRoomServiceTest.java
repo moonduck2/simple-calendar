@@ -24,7 +24,7 @@ public class MeetingRoomServiceTest {
 	private RoomDao roomDao;
 	
 	@Test
-	public void 새로운_회의실_만드는_메소드_테스트() {
+	public void 회의실_수정_생성_메소드_테스트() {
 		RoomDto room = mock(RoomDto.class);
 		Room roomEntity = mock(Room.class);
 		when(room.toEntity()).thenReturn(roomEntity);
@@ -33,5 +33,11 @@ public class MeetingRoomServiceTest {
 
 		service.createOrUpdateRoom(room);
 		verify(roomDao).save(eq(roomEntity));
+	}
+	
+	@Test
+	public void 회의실_삭제_메소드_테스트() {
+		service.deleteRoom(1);
+		verify(roomDao).deleteById(eq(1));
 	}
 }
