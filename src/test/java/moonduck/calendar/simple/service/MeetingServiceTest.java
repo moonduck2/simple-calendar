@@ -97,23 +97,14 @@ public class MeetingServiceTest {
 		}
 	}
 
+	//mockDao의 쿼리 수행 결과를 그대로 리턴하는지 테스트
 	@Test
 	public void 기준일의_모든_회의_가져오기() {
-		Meeting abandonedMeeting = mock(Meeting.class);
-		when(abandonedMeeting.getRecurrence()).thenReturn(mock(Recurrence.class));
-		when(mockRecurChecker.isOccur(any(LocalDate.class), eq(abandonedMeeting), any(Recurrence.class)))
-		.thenReturn(false);
-
-		Meeting availableMeeting = mock(Meeting.class);
-		when(availableMeeting.getRecurrence()).thenReturn(null);
-		when(mockRecurChecker.isOccur(any(LocalDate.class), eq(availableMeeting), any(Recurrence.class)))
-		.thenReturn(true);
-
-		List<Meeting> mockMeetings = Arrays.asList(abandonedMeeting, availableMeeting);
-		when(mockDao.findMeetingByDate(any(LocalDate.class))).thenReturn(mockMeetings);
+		List<Meeting> mockMeetings = mock(List.class);
+		when(mockDao.findMeetingByDate(any(LocalDate.class), any(Integer.class))).thenReturn(mockMeetings);
 
 		//LocalDate.now는 의미 없는 값임, 회의실을 지정하지 않을 경우 모든 회의실의 일정을 조회함
-		assertEquals(Arrays.asList(availableMeeting), 
+		assertEquals(mockMeetings, 
 				service.findMeetingByDate(LocalDate.now(), Collections.emptyList()));
 	}
 }

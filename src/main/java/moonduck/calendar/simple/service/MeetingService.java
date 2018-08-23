@@ -108,20 +108,19 @@ public class MeetingService {
 		});
 	}
 	
-	//TODO : 임시로 넣은 회의도 같이 나올 수 있으므로 중복된 회의는 선점한 회의만 빼고 제거하자
+	/**
+	 * 특정날짜의 회의를 조회한다.
+	 * @param date 기준일자
+	 * @param rooms 회의실
+	 * @return 회의실 일정 리스트
+	 */
 	@Transactional
 	public List<Meeting> findMeetingByDate(LocalDate date, Collection<String> rooms) {
 		List<Meeting> allMeetings = CollectionUtils.isEmpty(rooms) 
-				? meetingDao.findMeetingByDate(date)
-				: meetingDao.findMeetingByDate(date, rooms);
+				? meetingDao.findMeetingByDate(date, date.getDayOfWeek().getValue())
+				: meetingDao.findMeetingByDate(date, date.getDayOfWeek().getValue(), rooms);
 				
-		return allMeetings.stream().filter(meeting -> {
-			Recurrence recur = meeting.getRecurrence();
-			if (recur == null || recurrenceService.isOccur(date, meeting, recur)) {
-				return true;
-			}
-			return false;
-		}).collect(Collectors.toList());
+		return allMeetings;
 	}
 	
 	@Transactional

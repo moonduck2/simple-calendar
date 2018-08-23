@@ -32,12 +32,16 @@ public interface MeetingDao extends CrudRepository<Meeting, Integer> {
 			@Param("startDate") LocalDate startDate, @Param("dayOfWeek") int dayOfWeek);
 	
 	//TODO: unit test
-	@Query("select m from Meeting m where startDate <= :baseDate and endDate >= :baseDate")
-	List<Meeting> findMeetingByDate(@Param("baseDate") LocalDate baseDate);
+	@Query("select m from Meeting m where m.recurrence.dayOfWeek = :dayOfWeek and m.enabled = 1"
+			+ " and m.startDate <= :baseDate and m.endDate >= :baseDate")
+	List<Meeting> findMeetingByDate(@Param("baseDate") LocalDate baseDate, @Param("dayOfWeek") int dayOfWeek);
 
 	//TODO: unit test
-	@Query("select m from Meeting m where startDate <= :baseDate and endDate >= :baseDate and m.meetingRoom in :rooms")
-	List<Meeting> findMeetingByDate(@Param("baseDate") LocalDate baseDate, @Param("rooms") Collection<String> rooms);
+	@Query("select m from Meeting m where m.recurrence.dayOfWeek = :dayOfWeek and enabled = 1"
+			+ " and m.startDate <= :baseDate and m.endDate >= :baseDate"
+			+ " and m.meetingRoom IN :rooms")
+	List<Meeting> findMeetingByDate(@Param("baseDate") LocalDate baseDate,
+			@Param("dayOfWeek") int dayOfWeek, @Param("rooms") Collection<String> rooms);
 	
 	//TODO: unit test
 	@Query("select m from Meeting m where m.id != :id and m.meetingRoom = :room"
