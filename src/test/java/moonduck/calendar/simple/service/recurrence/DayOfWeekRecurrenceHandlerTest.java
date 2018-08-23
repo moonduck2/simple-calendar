@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import moonduck.calendar.simple.entity.Meeting;
 import moonduck.calendar.simple.entity.Recurrence;
+import moonduck.calendar.simple.entity.Room;
 import moonduck.calendar.simple.enumeration.RecurrenceType;
 
 @RunWith(SpringRunner.class)
@@ -29,7 +30,7 @@ public class DayOfWeekRecurrenceHandlerTest {
 		when(mockMeeting.getEndDate()).thenReturn(LocalDate.of(2018, 8, 31));
 		when(mockMeeting.getStartTime()).thenReturn(LocalTime.of(10, 0));
 		when(mockMeeting.getEndTime()).thenReturn(LocalTime.of(11, 30));
-		when(mockMeeting.getMeetingRoom()).thenReturn("회의실");
+		when(mockMeeting.getMeetingRoom()).thenReturn(mock(Room.class));
 		
 		Recurrence mockRecur = mock(Recurrence.class);
 		
@@ -44,7 +45,7 @@ public class DayOfWeekRecurrenceHandlerTest {
 		when(mockMeeting.getEndDate()).thenReturn(LocalDate.of(2018, 8, 31));
 		when(mockMeeting.getStartTime()).thenReturn(LocalTime.of(10, 0));
 		when(mockMeeting.getEndTime()).thenReturn(LocalTime.of(11, 30));
-		when(mockMeeting.getMeetingRoom()).thenReturn("회의실");
+		when(mockMeeting.getMeetingRoom()).thenReturn(mock(Room.class));
 		
 		Recurrence mockRecur = mock(Recurrence.class);
 		when(mockRecur.getDayOfWeek()).thenReturn(DayOfWeek.WEDNESDAY.getValue());

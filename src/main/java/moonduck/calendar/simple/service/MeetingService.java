@@ -17,10 +17,13 @@ import org.springframework.util.CollectionUtils;
 
 import moonduck.calendar.simple.dao.MeetingDao;
 import moonduck.calendar.simple.dao.RecurrenceDao;
+import moonduck.calendar.simple.dao.RoomDao;
 import moonduck.calendar.simple.dto.MeetingDto;
 import moonduck.calendar.simple.dto.RecurrenceDto;
+import moonduck.calendar.simple.dto.RoomDto;
 import moonduck.calendar.simple.entity.Meeting;
 import moonduck.calendar.simple.entity.Recurrence;
+import moonduck.calendar.simple.entity.Room;
 import moonduck.calendar.simple.exception.MeetingDuplicationException;
 
 /**
@@ -33,6 +36,9 @@ public class MeetingService {
 	
 	@Autowired
 	private RecurrenceDao recurDao;
+	
+	@Autowired
+	private RoomDao roomDao;
 	
 	@Autowired
 	private CalendarUtilService util;
@@ -55,7 +61,7 @@ public class MeetingService {
 		
 		Meeting meetingEntity = saveMeeting(meeting, false);
 		//TODO : 처음부터 겹치는 시간대만 가져오자
-		List<Meeting> possibleDuplicate = meetingDao.findAllMeetingInDate(meeting.getMeetingRoom(), 
+		List<Meeting> possibleDuplicate = meetingDao.findAllMeetingInDate(meeting.getMeetingRoom().getId(), 
 				meeting.getStartDate(), meeting.getRecurrence().getDayOfWeek());
 		
 		//시간이 겹치는 구간을 찾는다.
@@ -106,12 +112,12 @@ public class MeetingService {
 	 * 특정날짜의 회의를 조회한다.
 	 * @param date 기준일자
 	 * @param rooms 회의실
-	 * @return 회의실 일정 리스트
+	 * @return 회의실별 일정 리스트
 	 */
-	public List<MeetingDto> findMeetingByDate(LocalDate date, Collection<String> rooms) {
-		List<Meeting> allMeetings = CollectionUtils.isEmpty(rooms) 
-				? meetingDao.findMeetingByDate(date, date.getDayOfWeek().getValue())
-				: meetingDao.findMeetingByDate(date, date.getDayOfWeek().getValue(), rooms);
+	public List<RoomDto> findMeetingByDate(LocalDate date, Collection<Integer> rooms) {
+		List<Room> allMeetings = CollectionUtils.isEmpty(rooms) 
+				? roomDao.findMeetingsEachRooms(date, date.getDayOfWeek().getValue())
+				: roomDao.findMeetingsEachRooms(date, date.getDayOfWeek().getValue(), rooms);
 				
 		return allMeetings.stream().map(entity -> entity.toDto()).collect(Collectors.toList());
 	}

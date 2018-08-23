@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -19,10 +18,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import moonduck.calendar.simple.dao.MeetingDao;
 import moonduck.calendar.simple.dao.RecurrenceDao;
+import moonduck.calendar.simple.dao.RoomDao;
 import moonduck.calendar.simple.dto.MeetingDto;
 import moonduck.calendar.simple.dto.RecurrenceDto;
+import moonduck.calendar.simple.dto.RoomDto;
 import moonduck.calendar.simple.entity.Meeting;
 import moonduck.calendar.simple.entity.Recurrence;
+import moonduck.calendar.simple.entity.Room;
 import moonduck.calendar.simple.exception.MeetingDuplicationException;
 
 @RunWith(SpringRunner.class)
@@ -33,6 +35,9 @@ public class MeetingServiceTest {
 
 	@Mock
 	private MeetingDao mockDao;
+	
+	@Mock
+	private RoomDao roomDao;
 
 	@Mock
 	private RecurrenceDao recurDao;
@@ -63,6 +68,7 @@ public class MeetingServiceTest {
 		when(mockMeeting.getStartDate()).thenReturn(LocalDate.now());
 		when(mockMeeting.getRecurrence()).thenReturn(mockRecur);
 		when(mockMeeting.toEntity(any(Boolean.class))).thenReturn(mock(Meeting.class));
+		when(mockMeeting.getMeetingRoom()).thenReturn(mock(RoomDto.class));
 
 		assertEquals(expectedId, service.addMeeting(mockMeeting));
 	}
@@ -88,6 +94,7 @@ public class MeetingServiceTest {
 		when(mockMeeting.getStartDate()).thenReturn(LocalDate.now());
 		when(mockMeeting.getRecurrence()).thenReturn(mockRecur);
 		when(mockMeeting.toEntity(any(Boolean.class))).thenReturn(mock(Meeting.class));
+		when(mockMeeting.getMeetingRoom()).thenReturn(mock(RoomDto.class));
 		
 		try {
 			service.addMeeting(mockMeeting);
@@ -100,15 +107,16 @@ public class MeetingServiceTest {
 	//mockDao의 쿼리 수행 결과를 그대로 리턴하는지 테스트
 	@Test
 	public void 기준일의_모든_회의_가져오기() {
-		MeetingDto mockMeeting = mock(MeetingDto.class);
-		Meeting mockMeetingEntity = mock(Meeting.class);
-		when(mockMeetingEntity.toDto()).thenReturn(mockMeeting);
 		
-		List<Meeting> mockMeetings = Arrays.asList(mockMeetingEntity);
-		when(mockDao.findMeetingByDate(any(LocalDate.class), any(Integer.class))).thenReturn(mockMeetings);
+		RoomDto mockRoom = mock(RoomDto.class);
+		Room mockRoomEntity = mock(Room.class);
+		when(mockRoomEntity.toDto()).thenReturn(mockRoom);
+		
+		List<Room> mockMeetings = Arrays.asList(mockRoomEntity);
+		when(roomDao.findMeetingsEachRooms(any(LocalDate.class), any(Integer.class))).thenReturn(mockMeetings);
 
 		//LocalDate.now는 의미 없는 값임, 회의실을 지정하지 않을 경우 모든 회의실의 일정을 조회함
-		assertEquals(Arrays.asList(mockMeeting), 
+		assertEquals(Arrays.asList(mockRoom), 
 				service.findMeetingByDate(LocalDate.now(), Collections.emptyList()));
 	}
 }

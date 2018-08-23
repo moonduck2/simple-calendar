@@ -74,6 +74,10 @@ public class Meeting {
 		return id;
 	}
 
+	public Room getMeetingRoom() {
+		return meetingRoom;
+	}
+
 	public LocalDate getStartDate() {
 		return startDate;
 	}

@@ -28,7 +28,7 @@ public interface MeetingDao extends CrudRepository<Meeting, Integer> {
 	@Query("select m from Meeting m where m.meetingRoom = :room"
 			+ " and m.recurrence.dayOfWeek = :dayOfWeek"
 			+ " and m.endDate >= :startDate")
-	List<Meeting> findAllMeetingInDate(@Param("room") String room, 
+	List<Meeting> findAllMeetingInDate(@Param("room") int roomId, 
 			@Param("startDate") LocalDate startDate, @Param("dayOfWeek") int dayOfWeek);
 	
 	//TODO: unit test

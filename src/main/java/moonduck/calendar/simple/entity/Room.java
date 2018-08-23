@@ -22,7 +22,7 @@ public class Room {
 	@Column
 	private String name;
 	
-	@OneToMany(mappedBy = "meetingRoom", fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "meetingRoom")
 	private List<Meeting> meetings;
 
 	public Integer getId() {
@@ -47,8 +47,9 @@ public class Room {
 		return meetings;
 	}
 
-	public void setMeetings(List<Meeting> meetings) {
+	public Room setMeetings(List<Meeting> meetings) {
 		this.meetings = meetings;
+		return this;
 	}
 	
 	public RoomDto toDto() {
