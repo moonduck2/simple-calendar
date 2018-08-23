@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import moonduck.calendar.simple.dto.MeetingDto;
-import moonduck.calendar.simple.entity.Meeting;
+import moonduck.calendar.simple.dto.RoomDto;
 import moonduck.calendar.simple.service.MeetingService;
 
 @RestController
@@ -30,8 +30,8 @@ public class ApiController {
 	private MeetingService meetingService;
 	
 	@GetMapping
-	public List<MeetingDto> getMeetings(@RequestParam @DateTimeFormat(iso = ISO.DATE) LocalDate date, 
-			@RequestParam(required = false) Collection<String> rooms) {
+	public List<RoomDto> getMeetings(@RequestParam @DateTimeFormat(iso = ISO.DATE) LocalDate date, 
+			@RequestParam(required = false) Collection<Integer> rooms) {
 		return meetingService.findMeetingByDate(date, rooms);
 	}
 	

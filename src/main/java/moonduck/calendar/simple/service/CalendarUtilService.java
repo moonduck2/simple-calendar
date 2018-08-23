@@ -1,9 +1,7 @@
 package moonduck.calendar.simple.service;
 
 import java.time.DayOfWeek;
-import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;

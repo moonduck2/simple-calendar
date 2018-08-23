@@ -23,7 +23,6 @@ import moonduck.calendar.simple.dto.MeetingDto;
 import moonduck.calendar.simple.dto.RecurrenceDto;
 import moonduck.calendar.simple.dto.RoomDto;
 import moonduck.calendar.simple.entity.Meeting;
-import moonduck.calendar.simple.entity.Recurrence;
 import moonduck.calendar.simple.entity.Room;
 import moonduck.calendar.simple.exception.MeetingDuplicationException;
 
