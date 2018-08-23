@@ -16,6 +16,7 @@ public class MeetingDto {
 	private String title;
 	private String content;
 	private RoomDto meetingRoom;
+	private String userName;
 	
 	private RecurrenceDto recurrence;
 
@@ -95,6 +96,15 @@ public class MeetingDto {
 		return this;
 	}
 	
+	public String getUserName() {
+		return userName;
+	}
+
+	public MeetingDto setUserName(String userName) {
+		this.userName = userName;
+		return this;
+	}
+
 	public Meeting toEntity(boolean includeId) {
 		Meeting meeting = new Meeting();
 		if (includeId) {
@@ -108,6 +118,7 @@ public class MeetingDto {
 		meeting.setTitle(this.title);
 		meeting.setContent(this.content);
 		meeting.setRecurrence(this.recurrence.toEntity(includeId));
+		meeting.setUserName(userName);
 		return meeting;
 	}
 }

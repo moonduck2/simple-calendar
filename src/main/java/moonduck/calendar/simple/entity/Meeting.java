@@ -62,6 +62,9 @@ public class Meeting {
 	@Column(name = "modified_time")
 	private long modifiedTime;
 	
+	@Column(name = "user_name")
+	private String userName;
+	
 	@OneToOne
 	@JoinColumn(name = "recur_id")
 	private Recurrence recurrence;
@@ -170,6 +173,15 @@ public class Meeting {
 	
 	public Meeting setModifedTime(long timestamp) {
 		this.modifiedTime = timestamp;
+		return this;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public Meeting setUserName(String userName) {
+		this.userName = userName;
 		return this;
 	}
 
