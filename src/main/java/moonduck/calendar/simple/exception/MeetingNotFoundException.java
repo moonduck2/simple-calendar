@@ -1,4 +1,4 @@
-package moonduck.calendar.simple.service;
+package moonduck.calendar.simple.exception;
 
 public class MeetingNotFoundException extends RuntimeException {
 

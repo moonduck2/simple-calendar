@@ -25,6 +25,7 @@ import moonduck.calendar.simple.entity.Meeting;
 import moonduck.calendar.simple.entity.Recurrence;
 import moonduck.calendar.simple.entity.Room;
 import moonduck.calendar.simple.exception.MeetingDuplicationException;
+import moonduck.calendar.simple.exception.MeetingNotFoundException;
 
 /**
  * 회의실 예약에 관한 트랜잭션 처리를 총괄한다. 
