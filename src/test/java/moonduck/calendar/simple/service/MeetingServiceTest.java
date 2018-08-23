@@ -33,7 +33,7 @@ public class MeetingServiceTest {
 	private MeetingService service;
 
 	@Mock
-	private MeetingDao mockDao;
+	private MeetingDao meetingDao;
 	
 	@Mock
 	private RoomDao roomDao;
@@ -52,7 +52,7 @@ public class MeetingServiceTest {
 		int expectedId = 1;
 		Meeting mockResultEntity = mock(Meeting.class); //meetingDao의 save결과 mock
 		when(mockResultEntity.getId()).thenReturn(expectedId); //addMeeting의 결과는 mockResultEntity의 ID인 1이 나와야 한다
-		when(mockDao.save(any())).thenReturn(mockResultEntity);
+		when(meetingDao.save(any())).thenReturn(mockResultEntity);
 
 		//선점 성공을 의미하는 mock 설정(findDuplicatedPeriod은 중복된 시간대에 저장된 시간 순서의 자료구조를 리턴하므로)
 		SortedSet<Meeting> mockSortedResult = mock(SortedSet.class);
@@ -76,7 +76,7 @@ public class MeetingServiceTest {
 	public void 선점에_실패했을_경우_addOrUpdate_테스트() {
 		Meeting mockResultEntity = mock(Meeting.class); //meetingDao의 save결과 mock
 		when(mockResultEntity.getId()).thenReturn(1);
-		when(mockDao.save(any())).thenReturn(mockResultEntity);
+		when(meetingDao.save(any())).thenReturn(mockResultEntity);
 
 		//id가 1인 회의가 선점에 실패하여 id가 3인 회의가 선점한 경우
 		Meeting firstReservedMeeting = mock(Meeting.class);
@@ -97,13 +97,13 @@ public class MeetingServiceTest {
 		
 		try {
 			service.addMeeting(mockMeeting);
-			verify(mockDao).delete(eq(mockResultEntity));
+			verify(meetingDao).delete(eq(mockResultEntity));
 		} catch (MeetingDuplicationException ex) {
 			throw ex;
 		}
 	}
 
-	//mockDao의 쿼리 수행 결과를 그대로 리턴하는지 테스트
+	//meetingDao의 쿼리 수행 결과를 그대로 리턴하는지 테스트
 	@Test
 	public void 기준일의_모든_회의_가져오기() {
 		
@@ -117,5 +117,11 @@ public class MeetingServiceTest {
 		//LocalDate.now는 의미 없는 값임, 회의실을 지정하지 않을 경우 모든 회의실의 일정을 조회함
 		assertEquals(Arrays.asList(mockRoom), 
 				service.findMeetingByDate(LocalDate.now(), Collections.emptyList()));
+	}
+	
+	@Test
+	public void 회의삭제테스트() {
+		service.deleteMeeting(12);
+		verify(meetingDao).deleteById(eq(12));
 	}
 }
