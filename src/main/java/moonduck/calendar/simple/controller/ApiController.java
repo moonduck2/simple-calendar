@@ -49,4 +49,9 @@ public class ApiController {
 	public void deleteMeeting(@PathVariable int meetingId) {
 		meetingService.deleteMeeting(meetingId);
 	}
+	
+	@GetMapping(path = "rooms")
+	public void getAllRooms() {
+		
+	}
 }

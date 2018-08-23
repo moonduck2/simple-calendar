@@ -7,8 +7,6 @@ import java.time.LocalTime;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import org.springframework.util.StringUtils;
-
 import moonduck.calendar.simple.dto.MeetingDto;
 import moonduck.calendar.simple.dto.RecurrenceDto;
 import moonduck.calendar.simple.util.TemporalCalculator;
@@ -51,7 +49,7 @@ public class MeetingValidator implements ConstraintValidator<ValidMeeting, Meeti
 				!ValidatorUtils.isValidMeetingMinutes(endTime.getMinute())) {
 			return false;
 		}
-		return !StringUtils.isEmpty(value.getMeetingRoom()) || !"".equals(value.getMeetingRoom().trim());
+		return value.getMeetingRoom() != null;
 	}
 
 }

@@ -1,10 +1,12 @@
 package moonduck.calendar.simple.dto;
 
+import javax.validation.constraints.NotNull;
+
 import moonduck.calendar.simple.entity.Room;
 
 public class RoomDto {
 	private int id;
-	private String name;
+	@NotNull private String name;
 	
 	public int getId() {
 		return id;
