@@ -167,6 +167,11 @@ public class Meeting {
 		this.modifiedTime = System.nanoTime();
 		return this;
 	}
+	
+	public Meeting setModifedTime(long timestamp) {
+		this.modifiedTime = timestamp;
+		return this;
+	}
 
 	public MeetingDto toDto() {
 		return new MeetingDto()
