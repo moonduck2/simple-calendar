@@ -5,16 +5,16 @@ import javax.validation.constraints.NotNull;
 import moonduck.calendar.simple.entity.Room;
 
 public class RoomDto {
-	private int id;
+	private Integer id;
 	@NotNull private String name;
 	
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 	public String getName() {
 		return name;
 	}
-	public RoomDto setId(int id) {
+	public RoomDto setId(Integer id) {
 		this.id = id;
 		return this;
 	}
