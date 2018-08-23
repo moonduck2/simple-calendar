@@ -15,7 +15,7 @@ public class MeetingDto {
 	private LocalTime endTime;
 	private String title;
 	private String content;
-	private String meetingRoom;
+	private RoomDto meetingRoom;
 	
 	private RecurrenceDto recurrence;
 
@@ -47,7 +47,7 @@ public class MeetingDto {
 		return content;
 	}
 
-	public String getMeetingRoom() {
+	public RoomDto getMeetingRoom() {
 		return meetingRoom;
 	}
 
@@ -85,7 +85,7 @@ public class MeetingDto {
 		return this;
 	}
 
-	public MeetingDto setMeetingRoom(String meetingRoom) {
+	public MeetingDto setMeetingRoom(RoomDto meetingRoom) {
 		this.meetingRoom = meetingRoom;
 		return this;
 	}
@@ -104,7 +104,7 @@ public class MeetingDto {
 		meeting.setEndDate(this.endDate);
 		meeting.setStartTime(this.startTime);
 		meeting.setEndTime(this.endTime);
-		meeting.setMeetingRoom(this.meetingRoom);
+		meeting.setMeetingRoom(this.meetingRoom.toEntity());
 		meeting.setTitle(this.title);
 		meeting.setContent(this.content);
 		meeting.setRecurrence(this.recurrence.toEntity(includeId));

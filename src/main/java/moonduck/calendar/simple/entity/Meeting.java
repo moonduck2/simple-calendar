@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -21,7 +22,7 @@ import moonduck.calendar.simple.dto.MeetingDto;
 @Table(name = "meeting", indexes = {
 	@Index(columnList = "start_date"), @Index(columnList = "end_date"),
 	@Index(columnList = "start_time"), @Index(columnList = "end_time"),
-	@Index(columnList = "meeting_room"), @Index(columnList = "modified_time"),
+	@Index(columnList = "room_id"), @Index(columnList = "modified_time"),
 	@Index(columnList = "enabled")
 })
 @Entity
@@ -54,10 +55,6 @@ public class Meeting {
 	@Column(length = 1000)
 	private String content;
 	
-	@NotNull
-	@Column(name = "meeting_room", length = 20)
-	private String meetingRoom;
-	
 	@Column(name = "enabled")
 	private boolean enabled;
 	
@@ -68,6 +65,10 @@ public class Meeting {
 	@OneToOne
 	@JoinColumn(name = "recur_id")
 	private Recurrence recurrence;
+	
+	@ManyToOne
+	@JoinColumn(name = "room_id")
+	private Room meetingRoom;
 
 	public Integer getId() {
 		return id;
@@ -95,10 +96,6 @@ public class Meeting {
 
 	public String getContent() {
 		return content;
-	}
-
-	public String getMeetingRoom() {
-		return meetingRoom;
 	}
 
 	public Recurrence getRecurrence() {
@@ -148,7 +145,7 @@ public class Meeting {
 		return this;
 	}
 
-	public Meeting setMeetingRoom(String meetingRoom) {
+	public Meeting setMeetingRoom(Room meetingRoom) {
 		this.meetingRoom = meetingRoom;
 		return this;
 	}
@@ -175,7 +172,7 @@ public class Meeting {
 				.setEndTime(endTime)
 				.setTitle(title)
 				.setContent(content)
-				.setMeetingRoom(meetingRoom)
+				.setMeetingRoom(meetingRoom.toDto())
 				.setRecurrence(recurrence.toDto());
 	}
 	public Meeting update(Meeting value) {
