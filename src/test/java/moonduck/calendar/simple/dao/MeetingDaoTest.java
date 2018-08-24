@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,26 +32,65 @@ public class MeetingDaoTest {
 	@Autowired
 	private RecurrenceDao recurDao;
 
+	private Room room;
+	@Before
+	public void init() {
+		room = roomDao.save(new Room().setName("회의실1"));
+		//07-18(수) ~ 07-25(수), 09:00 ~ 13:00, 수요일 반복
+		Meeting meeting1 = prepareMeeting(LocalDate.of(2018, 7, 18), LocalDate.of(2018, 7, 25), 
+				LocalTime.of(9, 0), LocalTime.of(13, 0));
+		Recurrence recurEntity = prepareRecurrence(RecurrenceType.ONCE_A_WEEK, DayOfWeek.WEDNESDAY, null);
+		meeting1.setRecurrence(recurEntity).setMeetingRoom(room);
+
+		//07-23(월) ~ 07-30(월), 10:00 ~ 15:00, 반복 없음
+		Meeting meeting2 = prepareMeeting(LocalDate.of(2018, 7, 23), LocalDate.of(2018, 7, 30), 
+				LocalTime.of(10, 0), LocalTime.of(15, 0));
+		meeting2.setMeetingRoom(room);
+
+		//07-12(목) ~ 07-26(목), 11:00 ~ 12:00, 목요일 반복 
+		Meeting meeting3 = prepareMeeting(LocalDate.of(2018, 7, 12), LocalDate.of(2018, 7, 26), 
+				LocalTime.of(11, 0), LocalTime.of(12, 0));
+		meeting3.setMeetingRoom(room);
+	}
+	
 	@Test
-	public void 특정_기준일에_회의가_있을_경우() {
-		//07-01 ~ 08-01, 09:00 ~ 11:00, 수요일 반복
-		Recurrence recurEntity = recurDao.save(new Recurrence()
-				.setType(RecurrenceType.ONCE_A_WEEK)
-				.setDayOfWeek(DayOfWeek.WEDNESDAY.getValue()));
-
-		Room room = roomDao.save(new Room().setName("회의실1"));
-		Meeting meeting = meetingDao.save(new Meeting()
-				.setMeetingRoom(room)
-				.setStartDate(LocalDate.of(2018, 7, 1))
-				.setEndDate(LocalDate.of(2018, 9, 1))
-				.setStartTime(LocalTime.of(9, 0))
-				.setEndTime(LocalTime.of(11, 0))
-				.setRecurrence(recurEntity)
-				.setEnabled(true));
-
+	public void 회의가_있을_수_있는_구간_있는_시간을_조회함() {
 		List<Meeting> meetings = meetingDao.findAllMeetingInDate(
-				room.getId(), LocalDate.of(2018, 8, 22), DayOfWeek.WEDNESDAY.getValue());
+				room.getId(), LocalDate.of(2018, 7, 15), LocalDate.of(2018, 7, 25),
+				LocalTime.of(11, 0), LocalTime.of(13, 0));
+		
+		assertEquals(3, meetings.size());
+	}
+	@Test
+	public void 회의가_없는_구간_조회함() {
+		List<Meeting> meetings = meetingDao.findAllMeetingInDate(
+				room.getId(), LocalDate.of(2018, 7, 7), LocalDate.of(2018, 7, 11),
+				LocalTime.of(11, 0), LocalTime.of(13, 0));
+		
+		assertTrue(meetings.isEmpty());
+	}
+	@Test
+	public void 회의가_있는_구간이지만_회의가_없는_시간대를_조회함() {
+		List<Meeting> meetings = meetingDao.findAllMeetingInDate(
+				room.getId(), LocalDate.of(2018, 7, 15), LocalDate.of(2018, 7, 25),
+				LocalTime.of(8, 0), LocalTime.of(9, 0));
 
-		assertEquals(Arrays.asList(meeting), meetings);
+		assertTrue(meetings.isEmpty());
+	}
+
+	private Meeting prepareMeeting(LocalDate startDate, LocalDate endDate,
+			LocalTime startTime, LocalTime endTime) {
+		return meetingDao.save(new Meeting()
+				.setStartDate(startDate)
+				.setEndDate(endDate)
+				.setStartTime(startTime)
+				.setEndTime(endTime));
+	}
+
+	private Recurrence prepareRecurrence(RecurrenceType type, DayOfWeek dayOfWeek, Integer count) {
+		return recurDao.save(new Recurrence()
+				.setType(type)
+				.setDayOfWeek(dayOfWeek.getValue())
+				.setCount(count));
 	}
 }
