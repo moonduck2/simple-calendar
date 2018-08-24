@@ -3,7 +3,7 @@ package moonduck.calendar.simple.service;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
-import java.util.SortedSet;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -47,6 +47,9 @@ public class MeetingService {
 	@Autowired
 	private EntityManager entityManager;
 	
+	@Autowired
+	private RecurrenceService recurChecker;
+	
 	//동시에 회의실을 잡을 수 있기때문에 가장 먼저 잡은 것만 빼고 나머지는 지운다.
 	//회의 요청이 insert되었다가 delete되면 예외를 던져 회의실 선점 실패를 알린다.
 	@Transactional
@@ -61,20 +64,20 @@ public class MeetingService {
 		util.normalizeMeeting(meeting);
 		
 		Meeting meetingEntity = saveMeeting(meeting, false);
-		//TODO : 처음부터 겹치는 시간대만 가져오자
-		List<Meeting> possibleDuplicate = meetingDao.findAllMeetingInDate(meeting.getMeetingRoom().getId(), 
-				meeting.getStartDate(), meeting.getRecurrence().getDayOfWeek());
+
+		List<Meeting> possibleDuplicate = meetingDao.findAllMeetingInDate(
+				meeting.getMeetingRoom().getId(), 
+				meeting.getStartDate(), meeting.getEndDate(),
+				meeting.getStartTime(), meeting.getEndTime());
 		
-		//시간이 겹치는 구간을 찾는다.
-		SortedSet<Meeting> duplicatedMeetings = util.findDuplicatedPeriod(
-				possibleDuplicate, meeting.getStartTime(), meeting.getEndTime());
+		//meetingEntity와 시간이 겹치는 회의 중 가장 먼저 예약된 회의를 찾는다.
+		Optional<Meeting> duplicatedMeetings = recurChecker.getFirstInDuplicatedMeeting(
+				meetingEntity, possibleDuplicate);
 		
 		//겹치는 시간 중 요청된 값이 가장 오래된 값이면 선점 성공, 그렇지 않으면 선점 실패로 예외 throw
-		Meeting firstMeeting = duplicatedMeetings.first();
-		if (firstMeeting.getId().equals(meetingEntity.getId())) {
+		if (!duplicatedMeetings.isPresent() || meetingEntity.getId().equals(duplicatedMeetings.get().getId())) {
 			return successFunc.apply(meetingEntity);
 		}
-		meetingDao.delete(meetingEntity);
 		throw new MeetingDuplicationException("이미 회의실이 선점되었습니다.");
 	}
 	

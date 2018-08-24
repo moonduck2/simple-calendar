@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import moonduck.calendar.simple.dto.MeetingDto;
 import moonduck.calendar.simple.dto.RecurrenceDto;
 import moonduck.calendar.simple.entity.Meeting;
-import moonduck.calendar.simple.enumeration.RecurrenceType;
 import moonduck.calendar.simple.util.TemporalCalculator;
 
 /**
@@ -53,35 +52,24 @@ public class CalendarUtilService {
 	 * @return 정상화된 DTO
 	 */
 	public MeetingDto normalizeMeeting(MeetingDto meeting) {
-		setRecurrenceIfNotExist(meeting);
 		calcRealStartDay(meeting);
 		calcRealEndDate(meeting);
 		return meeting;
 	}
 	
 	private MeetingDto calcRealStartDay(MeetingDto meeting) {
-		meeting.setStartDate(TemporalCalculator.calcFirstDate(meeting.getStartDate(), DayOfWeek.of(meeting.getRecurrence().getDayOfWeek())));
-		return meeting;
-	}
-	
-	private MeetingDto setRecurrenceIfNotExist(MeetingDto meeting) {
-		RecurrenceDto recur = meeting.getRecurrence();
-		if (recur == null) {
-			//문제의 단순화를 위해 반복이 없는 경우는 1회 반복으로 처리한다.
-			recur = new RecurrenceDto().setType(RecurrenceType.ONCE_A_WEEK)
-				.setCount(1)
-				//반복이 없는 경우는 startDate와 endDate가 같으므로 둘 중 어느 하나의 요일을 선택해도 무관하나
-				//startDate가 null인 경우는 절대 없으므로 항상 존재하는 값인 startDate의 요일을 선택
-				.setDayOfWeek(meeting.getStartDate().getDayOfWeek().getValue());
-			meeting.setRecurrence(recur);
+		if (meeting.getRecurrence() != null) {
+			meeting.setStartDate(TemporalCalculator.calcFirstDate(meeting.getStartDate(), DayOfWeek.of(meeting.getRecurrence().getDayOfWeek())));
 		}
 		return meeting;
 	}
 	
 	private MeetingDto calcRealEndDate(MeetingDto meeting) {
 		RecurrenceDto recur = meeting.getRecurrence();
-		meeting.setEndDate(TemporalCalculator.calcLastDate(
+		if (recur != null) {
+			meeting.setEndDate(TemporalCalculator.calcLastDate(
 				meeting.getStartDate(), DayOfWeek.of(recur.getDayOfWeek()), recur.getCount()));
+		}
 		return meeting;
 	}
 }

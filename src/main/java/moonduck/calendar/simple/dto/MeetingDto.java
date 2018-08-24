@@ -117,7 +117,9 @@ public class MeetingDto {
 		meeting.setMeetingRoom(this.meetingRoom.toEntity());
 		meeting.setTitle(this.title);
 		meeting.setContent(this.content);
-		meeting.setRecurrence(this.recurrence.toEntity(includeId));
+		if (this.recurrence != null) {
+			meeting.setRecurrence(this.recurrence.toEntity(includeId));
+		}
 		meeting.setUserName(userName);
 		return meeting;
 	}

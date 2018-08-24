@@ -9,4 +9,5 @@ import moonduck.calendar.simple.enumeration.RecurrenceType;
 public interface RecurrenceHandler {
 	public boolean isOccur(LocalDate date, Meeting meeting, Recurrence recurrence);
 	public RecurrenceType getAvailableType();
+	public LocalDate nextOccur(LocalDate baseDate, Recurrence recurrence);
 }

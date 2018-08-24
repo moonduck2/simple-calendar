@@ -64,15 +64,4 @@ public class CalendarUtilServiceTest {
 		dto.setEndDate(LocalDate.of(2018, 10, 10));
 		assertEquals(LocalDate.of(2018, 8, 2), service.normalizeMeeting(dto).getEndDate());
 	}
-	
-	@Test
-	public void MeetingDto_recurrence값_채우기_테스트() {
-		LocalDate startDate = LocalDate.of(2018, 8, 2);
-		MeetingDto dto = new MeetingDto();
-		dto.setStartDate(startDate);
-		
-		//반복설정이 없을 경우 startDate 기준요일로 1회 반복이 생성되어야 함
-		assertEquals(new RecurrenceDto().setType(RecurrenceType.ONCE_A_WEEK).setCount(1).setDayOfWeek(startDate.getDayOfWeek().getValue()),
-				service.normalizeMeeting(dto).getRecurrence());
-	}
 }

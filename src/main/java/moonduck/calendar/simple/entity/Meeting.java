@@ -186,15 +186,18 @@ public class Meeting {
 	}
 
 	public MeetingDto toDto() {
-		return new MeetingDto()
+		MeetingDto dto = new MeetingDto()
 				.setStartDate(startDate)
 				.setEndDate(endDate)
 				.setStartTime(startTime)
 				.setEndTime(endTime)
 				.setTitle(title)
 				.setContent(content)
-				.setMeetingRoom(meetingRoom.toDto())
-				.setRecurrence(recurrence.toDto());
+				.setMeetingRoom(meetingRoom.toDto());
+		if (this.recurrence != null) {
+			dto.setRecurrence(recurrence.toDto());
+		}
+		return dto;
 	}
 	public Meeting update(Meeting value) {
 		this.startDate = value.startDate;

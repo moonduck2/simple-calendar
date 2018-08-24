@@ -18,7 +18,7 @@ public interface RoomDao extends CrudRepository<Room, Integer> {
 	 * @return 모든 회의실
 	 */
 	@Query("select r from Room r left join r.meetings m left join m.recurrence rec where m.id is null or"
-			+ " (m.enabled = true and rec.dayOfWeek = :dayOfWeek"
+			+ " (m.enabled = true and (rec is null or rec.dayOfWeek = :dayOfWeek)"
 			+ " and m.startDate <= :baseDate and m.endDate >= :baseDate)")
 	List<Room> findMeetingsEachRooms(@Param("baseDate") LocalDate date, @Param("dayOfWeek") int dayOfWeek);
 	
@@ -30,7 +30,7 @@ public interface RoomDao extends CrudRepository<Room, Integer> {
 	 * @return 지정된 회의실에 한해 모든 회의를 가져온다.
 	 */
 	@Query("select r from Room r left join r.meetings m left join m.recurrence rec where r.id in :roomIds or"
-			+ " (r.id in :roomIds and m.enabled = true and rec.dayOfWeek = :dayOfWeek"
+			+ " (r.id in :roomIds and m.enabled = true and (rec is null or rec.dayOfWeek = :dayOfWeek)"
 			+ " and m.startDate <= :baseDate and m.endDate >= :baseDate)")
 	List<Room> findMeetingsEachRooms(@Param("baseDate") LocalDate date, @Param("dayOfWeek") int dayOfWeek, 
 			@Param("roomIds") Collection<Integer> roomIds);

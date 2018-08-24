@@ -1,6 +1,8 @@
 package moonduck.calendar.simple.service.recurrence;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 
 import org.springframework.stereotype.Service;
 
@@ -25,5 +27,10 @@ public class DayOfWeekRecurrenceHandler implements RecurrenceHandler {
 	@Override
 	public RecurrenceType getAvailableType() {
 		return RecurrenceType.ONCE_A_WEEK;
+	}
+
+	@Override
+	public LocalDate nextOccur(LocalDate baseDate, Recurrence recurrence) {
+		return baseDate.with(TemporalAdjusters.next(DayOfWeek.of(recurrence.getDayOfWeek())));
 	}
 }

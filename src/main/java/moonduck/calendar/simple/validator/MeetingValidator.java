@@ -22,8 +22,8 @@ public class MeetingValidator implements ConstraintValidator<ValidMeeting, Meeti
 		LocalDate endDate = value.getEndDate();
 
 		if (value.getRecurrence() == null) {
-			//반복이 없는데 start와 end가 같지 않으면 잘못된 요청으로 간주
-			if (!startDate.equals(endDate)) {
+			//반복이 없는데 end가 없으면 잘못된 요청으로 간주
+			if (endDate == null) {
 				return false;
 			}
 		} else if (endDate != null) {
