@@ -72,21 +72,14 @@
 			<label for="newMeetingRecurrence">반복설정</label>
 			<div class="form-group" id="newMeetingRecurrence">
 				<label class="checkbox-inline"><input type="checkbox" value="" id="isRecurrence">반복</label>
-				<div class="radio">
-				  <label><input type="radio" name="recurrenceDayOfWeek" disabled>월</label>
-				</div>
-				<div class="radio">
-				  <label><input type="radio" name="recurrenceDayOfWeek" disabled>화</label>
-				</div>
-				<div class="radio">
-				  <label><input type="radio" name="recurrenceDayOfWeek" disabled>수</label>
-				</div>
-				<div class="radio">
-				  <label><input type="radio" name="recurrenceDayOfWeek" disabled>목</label>
-				</div>
-				<div class="radio">
-				  <label><input type="radio" name="recurrenceDayOfWeek" disabled>금</label>
-				</div>
+			  <label><input type="radio" name="recurrenceDayOfWeek" data-order=1 disabled>월</label>
+			  <label><input type="radio" name="recurrenceDayOfWeek" data-order=2 disabled>화</label>
+			  <label><input type="radio" name="recurrenceDayOfWeek" data-order=3 disabled>수</label>
+			  <label><input type="radio" name="recurrenceDayOfWeek" data-order=4 disabled>목</label>
+			  <label><input type="radio" name="recurrenceDayOfWeek" data-order=5 disabled>금</label>
+			  <label><input type="radio" name="recurrenceDayOfWeek" data-order=6 disabled>토</label>
+			  <label><input type="radio" name="recurrenceDayOfWeek" data-order=7 disabled>일</label>
+			  <label><input type="number" id=recurrenceNumber>반복횟수</label>
 			</div>
 			
 		</div>
@@ -129,12 +122,8 @@
 				$("#newMeetingEndTime").val('');
 			}
 			$("#register_meeting").submit(function(e) {
-				$.post({
-					url : "http://localhost:8080/api/meeting",
-					method : "post",
-					contentType : "application/json;charset=utf-8",
-					dataType : 'json',
-					data : JSON.stringify({
+				e.preventDefault();
+				var data = {
 						startDate : $("#newMeetingStartDate").val(),
 						endDate : $("#newMeetingEndDate").val(),
 						title : $("#newMeetingTitle").val(),
@@ -144,8 +133,21 @@
 						endTime : $("#newMeetingEndTime").val(),
 						meetingRoom: {
 							id : $("#roomSelectBox option:selected").data('room-id')
-						}
-					}),
+						},
+				};
+				if($("#isRecurrence").is(":checked")) {
+					data.recurrence = {
+							dayOfWeek : $("#newMeetingRecurrence input:radio:checked").data("order"),
+							type : "ONCE_A_WEEK",
+							count : parseInt($("#recurrenceNumber").val())
+					}
+				}
+				$.ajax({
+					url : "http://localhost:8080/api/meeting",
+					method : "post",
+					contentType : "application/json;charset=utf-8",
+					dataType : 'json',
+					data : JSON.stringify(data),
 					success : function(data) {
 						clearNewMeeting()
 						init();
@@ -175,7 +177,7 @@
 				return false;
 			})
 			$('#isRecurrence').change(function() {
-				var $radio = $("#newMeetingRecurrence div input") 
+				var $radio = $("#newMeetingRecurrence input:radio") 
         if($(this).is(":checked")) {
         	$radio.attr('disabled', false)
         } else {
