@@ -18,7 +18,8 @@ public interface RoomDao extends CrudRepository<Room, Integer> {
 	 * @return 모든 회의실
 	 */
 	@EntityGraph(attributePaths = {"meetings", "meetings.recurrence"})
-	@Query("select distinct r from Room r left join r.meetings m left join m.recurrence rec where m.meetingRoom is null"
-			+ " or (m.enabled = true and m.startDate <= :baseDate and m.endDate >= :baseDate)")
+	@Query("select distinct r from Room r left join r.meetings m"
+			+ " on m.enabled = true and m.startDate <= :baseDate and m.endDate >=:baseDate"
+			+ " order by r.id")
 	List<Room> findAllPossibleMeetingsAtDateOfAllRooms(@Param("baseDate") LocalDate date);
 }
