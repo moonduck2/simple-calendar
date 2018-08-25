@@ -3,6 +3,11 @@ package moonduck.calendar.simple.dto;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import moonduck.calendar.simple.entity.Meeting;
 import moonduck.calendar.simple.entity.Room;
 import moonduck.calendar.simple.validator.annotation.ValidMeeting;
@@ -10,10 +15,23 @@ import moonduck.calendar.simple.validator.annotation.ValidMeeting;
 @ValidMeeting
 public class MeetingDto {
 	private Integer id;
+
+	@JsonFormat(pattern="yyyy-MM-dd")
+	@DateTimeFormat(iso = ISO.DATE) 
 	private LocalDate startDate;
+	
+	@JsonFormat(pattern="yyyy-MM-dd")
+	@DateTimeFormat(iso = ISO.DATE)
 	private LocalDate endDate;
+	
+	@JsonFormat(pattern="HH:mm")
+	@DateTimeFormat(iso = ISO.TIME)
 	private LocalTime startTime;
+	
+	@JsonFormat(pattern="HH:mm")
+	@DateTimeFormat(iso = ISO.TIME)
 	private LocalTime endTime;
+	
 	private String title;
 	private String content;
 	private int meetingRoom;
@@ -123,6 +141,11 @@ public class MeetingDto {
 		}
 		meeting.setUserName(userName);
 		return meeting;
+	}
+
+	public MeetingDto setId(Integer id) {
+		this.id = id;
+		return this;
 	}
 
 	@Override

@@ -192,13 +192,15 @@ public class Meeting {
 
 	public MeetingDto toDto() {
 		MeetingDto dto = new MeetingDto()
+				.setId(id)
 				.setStartDate(startDate)
 				.setEndDate(endDate)
 				.setStartTime(startTime)
 				.setEndTime(endTime)
 				.setTitle(title)
 				.setContent(content)
-				.setUserName(userName);
+				.setUserName(userName)
+				.setMeetingRoom(meetingRoom.getId());
 		if (this.recurrence != null) {
 			dto.setRecurrence(recurrence.toDto());
 		}
