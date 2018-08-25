@@ -287,6 +287,7 @@
 					url : "http://localhost:8080/api/meeting?date=" + todayStr,
 					crossDomain : true,
 					success : function(data) {
+						console.log(data)
 						var templateData;
 						setAllMeetingRoom(data);
 						
@@ -315,16 +316,10 @@
 			function nextDate(date) {
 				return new Date(date.getTime() + 24 * 60 * 60 * 1000)
 			}
-			$("#prevDate").click(function(e) {
-				var curDate = parseDate($("#today").data("today"));
-				init(prevDate(curDate));
-			});
-			$("#nextDate").click(function(e) {
-				var curDate = parseDate($("#today").data("today"));
-				init(nextDate(curDate));
-			});
-			$("#registerMeeting").submit(function(e) {
-				e.preventDefault();
+			function currentDate() {
+				return parseDate($("#today").data("today"));
+			}
+			function getNewMeeting() {
 				var data = {
 						startDate : $("#newMeetingStartDate").val(),
 						endDate : $("#newMeetingEndDate").val(),
@@ -342,6 +337,19 @@
 							count : parseInt($("#recurrenceNumber").val())
 					}
 				}
+				return data;
+			}
+			$("#prevDate").click(function(e) {
+				var curDate = parseDate($("#today").data("today"));
+				init(prevDate(curDate));
+			});
+			$("#nextDate").click(function(e) {
+				var curDate = parseDate($("#today").data("today"));
+				init(nextDate(curDate));
+			});
+			$("#registerMeeting").submit(function(e) {
+				e.preventDefault();
+				var data = getNewMeeting();
 				$.ajax({
 					url : "http://localhost:8080/api/meeting",
 					method : "post",
@@ -350,13 +358,13 @@
 					data : JSON.stringify(data),
 					success : function(data) {
 						clearNewMeeting()
-						//init();
+						init(currentDate());
 					},
 					error : function(xhr, textStatus, errorThrown) {
 						if (xhr.responseJSON.message === "선점실패") {
 							alert("이미 예약된 시간입니다");
 							
-							init(parseDate($("#today").data("today")));
+							init(currentDate());
 						}
 					}
 				})
@@ -378,7 +386,7 @@
 					}),
 					success : function(data) {
 						$("#newRoomName").val('')
-						init(parseDate($("#today").data("today")));
+						init(currentDate());
 					}
 				})
 				return false;
