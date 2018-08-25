@@ -15,7 +15,7 @@ public final class TemporalCalculator {
 	 * @param recurrence 반복횟수
 	 * @return 시작일을 포함해서 반복 후 마지막 날짜
 	 */
-	public static LocalDate calcLastDate(LocalDate start, DayOfWeek dayOfWeek, int recurrence) {
+	public static LocalDate calcLastDate(LocalDate start, DayOfWeek dayOfWeek, Integer recurrence) {
 		return start.getDayOfWeek() == dayOfWeek ? start.plusDays(7 * (recurrence - 1)) : //시작일 포함
 				start.with(TemporalAdjusters.next(dayOfWeek)).plusDays(7 * (recurrence - 1));
 	}

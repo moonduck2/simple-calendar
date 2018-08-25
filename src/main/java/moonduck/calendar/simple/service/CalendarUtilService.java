@@ -66,7 +66,7 @@ public class CalendarUtilService {
 	
 	private MeetingDto calcRealEndDate(MeetingDto meeting) {
 		RecurrenceDto recur = meeting.getRecurrence();
-		if (recur != null) {
+		if (recur != null && recur.getCount() != null) {
 			meeting.setEndDate(TemporalCalculator.calcLastDate(
 				meeting.getStartDate(), DayOfWeek.of(recur.getDayOfWeek()), recur.getCount()));
 		}

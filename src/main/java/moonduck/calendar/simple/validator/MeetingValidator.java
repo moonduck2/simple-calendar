@@ -27,11 +27,14 @@ public class MeetingValidator implements ConstraintValidator<ValidMeeting, Meeti
 				return false;
 			}
 		} else if (endDate != null) {
-			//반복횟수와 endDate가 맞지 않으면 잘못된 요청
 			RecurrenceDto recurrence = value.getRecurrence();
-			LocalDate minEndDate = TemporalCalculator.calcLastDate(startDate, DayOfWeek.of(recurrence.getDayOfWeek()), recurrence.getCount());
-			if (minEndDate.isAfter(endDate)) {
-				return false;
+			//횟수가 없으면 endDate를 따름
+			if (recurrence.getCount() != null) {
+				//반복횟수와 endDate가 맞지 않으면 잘못된 요청
+				LocalDate minEndDate = TemporalCalculator.calcLastDate(startDate, DayOfWeek.of(recurrence.getDayOfWeek()), recurrence.getCount());
+				if (minEndDate.isAfter(endDate)) {
+					return false;
+				}
 			}
 		}
 		//endDate는 startDate보다 미래여야 함

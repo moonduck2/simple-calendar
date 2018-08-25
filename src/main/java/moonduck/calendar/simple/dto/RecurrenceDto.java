@@ -17,7 +17,7 @@ public class RecurrenceDto {
 		return type;
 	}
 
-	public int getCount() {
+	public Integer getCount() {
 		return count;
 	}
 

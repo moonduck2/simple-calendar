@@ -223,8 +223,8 @@
 				var i, j, next, roomList = [], meetings = [], timeTable = [], content,
 					minStartTime, maxEndTime, roomOrder = {}, startTime, endTime, roomIdx,
 					startTimeMinutes, endTimeMinutes;
-				if (!rooms || !rooms.length) {
-					return [];
+				if (!rooms) {
+					rooms = [];
 				}
 
 				for (i = 0; i < rooms.length; i++) {
