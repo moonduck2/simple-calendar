@@ -18,7 +18,24 @@
 </head>
 <body>
 	<div id="controlBoxArea" class="container">
-		<div class="row align-items-center">
+		<div class="row">
+			<div id="today" class="col-xl text-center">
+		   	<h2>{{today}}</h2>
+		  </div>
+			<div class="col-4">
+				<form id="registerRoom">
+					<div class="row"> 
+						<div class="col">
+							<input type="text" class="form-control" id="newRoomName" placeholder="새 회의실">
+						</div>
+						<div class="col-xs">
+							<button type="submit" class="btn btn-primary">Submit</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="row align-items-start">
 			<div id="timeTableArea" class="col-xl"></div>
 			
 			<div id="registerMeetingArea" class="col-4">
@@ -138,21 +155,6 @@
 		<div class="content">
 		    <div class="container">
 		        <div class="row align-items-end">
-		            <div class="col-lg text-center mb30">
-		            	<h2>{{today}}</h2>
-		            </div>
-								<div class="col-sm">
-									<form id="registerRoom">
-										<div class="row"> 
-											<div class="col">
-												<input type="text" class="form-control" id="newRoomName" placeholder="새 회의실">
-											</div>
-											<div class="col">
-												<button type="submit" class="btn btn-primary">Submit</button>
-											</div>
-										</div>
-									</form>
-								</div>
 		            <div class="table-responsive">
 		                <table class="timetable table table-striped ">
 		                    <thead>
