@@ -243,7 +243,7 @@
 				for (i = 0, next = minStartTime; next < maxEndTime; i++, next += 30) {
 					timeTable[i] = {
 							"schedule" : new Array(rooms.length),
-							"time" : toTimeStr(next) 
+							"time" : toTimeStr(next) + "~" + toTimeStr(next + 30)
 					}
 					for (j = 0; j < rooms.length; j++) {
 						timeTable[i].schedule[j] = "";
