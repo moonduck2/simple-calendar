@@ -17,88 +17,142 @@
 
 </head>
 <body>
-	<form id="register_room">
-		<div class="form-group">
-			<label for="newRoomName">회의실 등록</label> <input type="text"
-				class="form-control" id="newRoomName" placeholder="Enter room name">
+	<div id="controlBoxArea" class="container">
+		<div class="row align-items-center">
+			<div id="timeTableArea" class="col-xl"></div>
+			
+			<div id="registerMeetingArea" class="col-4">
+				<form id="registerMeeting">
+					<div class="row">
+						<div class="col">
+							<label for="newMeetingOwner">주최자</label>
+							<input class="form-control"	id="newMeetingOwner"> 
+						</div>
+						<div class="col">
+							<label for="newMeetingAllRooms">회의실</label>
+							<div class="form-group" id="newMeetingAllRooms">
+								<select class="form-control" id="roomSelectBox">
+								</select>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class = "col">
+							<label for="newMeetingStartDatePicker">시작일</label>
+							<div class='input-group date' id='newMeetingStartDatePicker'>
+								<input type='text' class="form-control" id="newMeetingStartDate" />
+								<span class="input-group-addon"> <span
+									class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
+						</div>
+						<div class="col">
+							<label for="newMeetingEndDatePicker">종료일</label>
+							<div class='input-group date' id='newMeetingEndDatePicker'>
+								<input type='text' class="form-control" id="newMeetingEndDate" /> 
+								<span	class="input-group-addon"> 
+									<span	class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
+						</div>
+						<div class="col">
+							<label for="newMeetingStartTimePicker">시작시간</label>
+							<div class='input-group date' id='newMeetingStartTimePicker'>
+								<input type='text' class="form-control" id="newMeetingStartTime" />
+								<span class="input-group-addon"> 
+									<span	class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
+						</div>
+						<div class="col">
+							<label for="newMeetingEndTimePicker">종료시간</label>
+							<div class='input-group date' id='newMeetingEndTimePicker'>
+								<input type='text' class="form-control" id="newMeetingEndTime" /> 
+								<span	class="input-group-addon"> 
+									<span	class="glyphicon glyphicon-calendar"></span>
+								</span>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<label for="newMeetingTitle">회의명</label> 
+							<input type="text" class="form-control" id="newMeetingTitle" placeholder="Enter meeting title">
+						</div> 
+					</div>
+					<div class="row">
+						<div class="col">
+							<label for="newMeetingContent">회의 요약</label>
+							<textarea class="form-control" rows="5" id="newMeetingContent"></textarea>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<label class="checkbox-inline">
+								<input type="checkbox"	value="" id="isRecurrence">반복
+							</label>
+						</div>
+						<div class="col">
+							<div class="col">
+								<input type="number" class="form-control" id="recurrenceNumber" placeholder="횟수">
+							</div>
+						</div>
+					</div>
+					<div class="row" id="newMeetingRecurrence">
+						<div class="col">
+							<div class="row">
+								<div class="col">
+									<label><input	type="radio" name="recurrenceDayOfWeek" data-order=1 disabled>월</label>
+								</div>
+								<div class="col">
+									<label><input type="radio" name="recurrenceDayOfWeek"	data-order=2 disabled>화</label>
+								</div>
+								<div class="col"> 
+									<label><input type="radio" name="recurrenceDayOfWeek" data-order=3 disabled>수</label>
+								</div>
+								<div class="col"> 
+									<label><input	type="radio" name="recurrenceDayOfWeek" data-order=4 disabled>목</label>
+								</div>
+								<div class="col">
+									<label><input type="radio" name="recurrenceDayOfWeek"	data-order=5 disabled>금</label>
+								</div>
+								<div class="col"> 
+									<label><input type="radio" name="recurrenceDayOfWeek" data-order=6 disabled>토</label>
+								</div>
+								<div class="col">
+									<label><input	type="radio" name="recurrenceDayOfWeek" data-order=7 disabled>일</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row text-center">
+						<div class="col">
+							<button type="submit" class="btn btn-primary">Submit</button>
+						</div>
+					</div>
+				</form>
+			</div>
 		</div>
-		<button type="submit" class="btn btn-primary">Submit</button>
-	</form>
-
-	<form id="register_meeting">
-		<div class="form-group">
-			<label for="newMeetingTitle">회의명</label> <input type="text"
-				class="form-control" id="newMeetingTitle"
-				placeholder="Enter meeting title"> <label
-				for="newMeetingContent">회의 요약</label>
-			<textarea class="form-control" rows="5" id="newMeetingContent"></textarea>
-
-			<label for="newMeetingOwner">주최자</label> <input class="form-control"
-				id="newMeetingOwner"> <label for="newMeetingStartDatePicker">시작일</label>
-			<div class='input-group date' id='newMeetingStartDatePicker'>
-				<input type='text' class="form-control" id="newMeetingStartDate" />
-				<span class="input-group-addon"> <span
-					class="glyphicon glyphicon-calendar"></span>
-				</span>
-			</div>
-
-			<label for="newMeetingEndDatePicker">종료일</label>
-			<div class='input-group date' id='newMeetingEndDatePicker'>
-				<input type='text' class="form-control" id="newMeetingEndDate" /> <span
-					class="input-group-addon"> <span
-					class="glyphicon glyphicon-calendar"></span>
-				</span>
-			</div>
-
-			<label for="newMeetingStartTimePicker">시작시간</label>
-			<div class='input-group date' id='newMeetingStartTimePicker'>
-				<input type='text' class="form-control" id="newMeetingStartTime" />
-				<span class="input-group-addon"> <span
-					class="glyphicon glyphicon-calendar"></span>
-				</span>
-			</div>
-
-			<label for="newMeetingEndTimePicker">종료시간</label>
-			<div class='input-group date' id='newMeetingEndTimePicker'>
-				<input type='text' class="form-control" id="newMeetingEndTime" /> <span
-					class="input-group-addon"> <span
-					class="glyphicon glyphicon-calendar"></span>
-				</span>
-			</div>
-
-			<label for="newMeetingAllRooms">회의실</label>
-			<div class="form-group" id="newMeetingAllRooms">
-				<select class="form-control" id="roomSelectBox">
-				</select>
-			</div>
-
-			<label for="newMeetingRecurrence">반복설정</label>
-			<div class="form-group" id="newMeetingRecurrence">
-				<label class="checkbox-inline"><input type="checkbox"
-					value="" id="isRecurrence">반복</label> <label><input
-					type="radio" name="recurrenceDayOfWeek" data-order=1 disabled>월</label>
-				<label><input type="radio" name="recurrenceDayOfWeek"
-					data-order=2 disabled>화</label> <label><input type="radio"
-					name="recurrenceDayOfWeek" data-order=3 disabled>수</label> <label><input
-					type="radio" name="recurrenceDayOfWeek" data-order=4 disabled>목</label>
-				<label><input type="radio" name="recurrenceDayOfWeek"
-					data-order=5 disabled>금</label> <label><input type="radio"
-					name="recurrenceDayOfWeek" data-order=6 disabled>토</label> <label><input
-					type="radio" name="recurrenceDayOfWeek" data-order=7 disabled>일</label>
-				<label><input type="number" id=recurrenceNumber>반복횟수</label>
-			</div>
-
-		</div>
-		<button type="submit" class="btn btn-primary">Submit</button>
-	</form>
-	<div id="timeTableArea"></div>
+	</div>
 	<script id="roomList" type="text/x-handlebars-template">
 		<div class="content">
 		    <div class="container">
-		        <div class="row">
-		            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 text-center mb30">
+		        <div class="row align-items-end">
+		            <div class="col-lg text-center mb30">
 		            	<h2>{{today}}</h2>
 		            </div>
+								<div class="col-sm">
+									<form id="registerRoom">
+										<div class="row"> 
+											<div class="col">
+												<input type="text" class="form-control" id="newRoomName" placeholder="새 회의실">
+											</div>
+											<div class="col">
+												<button type="submit" class="btn btn-primary">Submit</button>
+											</div>
+										</div>
+									</form>
+								</div>
 		            <div class="table-responsive">
 		                <table class="timetable table table-striped ">
 		                    <thead>
@@ -240,7 +294,7 @@
 				$("#newMeetingStartTime").val('');
 				$("#newMeetingEndTime").val('');
 			}
-			$("#register_meeting").submit(function(e) {
+			$("#registerMeeting").submit(function(e) {
 				e.preventDefault();
 				var data = {
 						startDate : $("#newMeetingStartDate").val(),
@@ -278,7 +332,7 @@
 				})
 				return false;
 			})
-			$("#register_room").submit(function(e) {
+			$("#registerRoom").submit(function(e) {
 				var roomName = $("#newRoomName").val();
 				if (!roomName || roomName.trim() === '') {
 					alert("회의실 이름을 정확히 기입해주세요!");
