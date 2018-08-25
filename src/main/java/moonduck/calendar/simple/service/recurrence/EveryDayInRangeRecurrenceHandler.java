@@ -2,10 +2,13 @@ package moonduck.calendar.simple.service.recurrence;
 
 import java.time.LocalDate;
 
+import org.springframework.stereotype.Service;
+
 import moonduck.calendar.simple.entity.Meeting;
 import moonduck.calendar.simple.entity.Recurrence;
 import moonduck.calendar.simple.enumeration.RecurrenceType;
 
+@Service
 public class EveryDayInRangeRecurrenceHandler implements RecurrenceHandler {
 
 	@Override
