@@ -176,7 +176,15 @@
 		                        <tr>
 		                            <th scope="row">{{time}}</th>
 															{{#each schedule}}
-		                            <td>{{this}}</td>
+		                            <td>
+																		<div>{{content}}</div>
+																{{#if meeting}}
+																		<div class="row">
+																			<div class="col"><button type="button" data-meeting-id={{meeting}} class="btn btn-warning modifyMeeting">수정</button></div>
+																			<div class="col"><button type="button" data-meeting-id={{meeting}} class="btn btn-danger deleteMeeting">삭제</button></div>
+																		</div>
+																{{/if}}
+																</td>
 															{{/each}}
 		                        </tr>
 													{{/each}}
@@ -252,7 +260,7 @@
 							"time" : toTimeStr(next) + "~" + toTimeStr(next + 30)
 					}
 					for (j = 0; j < rooms.length; j++) {
-						timeTable[i].schedule[j] = "";
+						timeTable[i].schedule[j] = {};
 					}
 				}
 				for (i = 0; i < meetings.length; i++) {
@@ -262,7 +270,8 @@
 					next = startTimeMinutes;
 					content = toReservationText(meetings[i]);
 					while (next < endTimeMinutes) {
-						timeTable[parseInt((next - minStartTime) / 30)].schedule[roomIdx] = content;
+						timeTable[parseInt((next - minStartTime) / 30)].schedule[roomIdx].content = content;
+						timeTable[parseInt((next - minStartTime) / 30)].schedule[roomIdx].meeting = meetings[i].id;
 						next += 30;
 					}
 				}
@@ -339,6 +348,22 @@
 				}
 				return data;
 			}
+			$("#timeTableArea").on("click", ".modifyMeeting", function(e) {
+				alert($(this).data("meetingId"))
+				
+			})
+			$("#timeTableArea").on("click", ".deleteMeeting", function(e) {
+				$.ajax({
+					url : "http://localhost:8080/api/meeting/" + $(this).data("meetingId"),
+					method : "delete",
+					success : function(data) {
+						init(currentDate());
+					},
+					error : function(xhr, textStatus, errorThrown) {
+						alert(xhr.responseJSON.message)
+					}
+				})
+			})
 			$("#prevDate").click(function(e) {
 				var curDate = parseDate($("#today").data("today"));
 				init(prevDate(curDate));
