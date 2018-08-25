@@ -16,7 +16,7 @@ public interface RoomDao extends CrudRepository<Room, Integer> {
 	 * @param dayOfWeek 기준일자의 요일
 	 * @return 모든 회의실
 	 */
-	@Query("select r from Room r left join r.meetings m left join m.recurrence rec where m.id is null"
+	@Query("select r from Room r left join r.meetings m left join m.recurrence rec where r.id is not null"
 			+ " or (m.enabled = true and m.startDate <= :baseDate and m.endDate >= :baseDate)")
 	List<Room> findAllPossibleMeetingsAtDateOfAllRooms(@Param("baseDate") LocalDate date);
 }
