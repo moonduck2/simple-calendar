@@ -39,6 +39,7 @@ public class RoomDaoTest {
 				.setStartTime(LocalTime.now())
 				.setEndTime(LocalTime.now())
 				.setEnabled(true)
+				.setUserName("예약자")
 				.setRecurrence(
 						recurDao.save(new Recurrence()
 								.setType(RecurrenceType.ONCE_A_WEEK)

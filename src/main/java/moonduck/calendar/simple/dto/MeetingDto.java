@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 import moonduck.calendar.simple.entity.Meeting;
+import moonduck.calendar.simple.entity.Room;
 import moonduck.calendar.simple.validator.annotation.ValidMeeting;
 
 @ValidMeeting
@@ -15,7 +16,7 @@ public class MeetingDto {
 	private LocalTime endTime;
 	private String title;
 	private String content;
-	private RoomDto meetingRoom;
+	private int meetingRoom;
 	private String userName;
 	
 	private RecurrenceDto recurrence;
@@ -48,7 +49,7 @@ public class MeetingDto {
 		return content;
 	}
 
-	public RoomDto getMeetingRoom() {
+	public int getMeetingRoom() {
 		return meetingRoom;
 	}
 
@@ -86,7 +87,7 @@ public class MeetingDto {
 		return this;
 	}
 
-	public MeetingDto setMeetingRoom(RoomDto meetingRoom) {
+	public MeetingDto setMeetingRoom(int meetingRoom) {
 		this.meetingRoom = meetingRoom;
 		return this;
 	}
@@ -114,7 +115,7 @@ public class MeetingDto {
 		meeting.setEndDate(this.endDate);
 		meeting.setStartTime(this.startTime);
 		meeting.setEndTime(this.endTime);
-		meeting.setMeetingRoom(this.meetingRoom.toEntity());
+		meeting.setMeetingRoom(new Room().setId(meetingRoom));
 		meeting.setTitle(this.title);
 		meeting.setContent(this.content);
 		if (this.recurrence != null) {
@@ -132,7 +133,7 @@ public class MeetingDto {
 		result = prime * result + ((endDate == null) ? 0 : endDate.hashCode());
 		result = prime * result + ((endTime == null) ? 0 : endTime.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
-		result = prime * result + ((meetingRoom == null) ? 0 : meetingRoom.hashCode());
+		result = prime * result + meetingRoom;
 		result = prime * result + ((recurrence == null) ? 0 : recurrence.hashCode());
 		result = prime * result + ((startDate == null) ? 0 : startDate.hashCode());
 		result = prime * result + ((startTime == null) ? 0 : startTime.hashCode());
@@ -170,10 +171,7 @@ public class MeetingDto {
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
-		if (meetingRoom == null) {
-			if (other.meetingRoom != null)
-				return false;
-		} else if (!meetingRoom.equals(other.meetingRoom))
+		if (meetingRoom != other.meetingRoom)
 			return false;
 		if (recurrence == null) {
 			if (other.recurrence != null)

@@ -65,7 +65,7 @@ public class MeetingService {
 		Meeting meetingEntity = saveMeeting(meeting, false);
 
 		List<Meeting> possibleDuplicate = meetingDao.findAllMeetingInDateAndTime(
-				meeting.getMeetingRoom().getId(), 
+				meeting.getMeetingRoom(), 
 				meeting.getStartDate(), meeting.getEndDate(),
 				meeting.getStartTime(), meeting.getEndTime());
 		

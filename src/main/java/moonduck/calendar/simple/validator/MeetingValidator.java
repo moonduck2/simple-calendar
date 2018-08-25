@@ -49,7 +49,7 @@ public class MeetingValidator implements ConstraintValidator<ValidMeeting, Meeti
 				!ValidatorUtils.isValidMeetingMinutes(endTime.getMinute())) {
 			return false;
 		}
-		return value.getMeetingRoom() != null;
+		return true;
 	}
 
 }

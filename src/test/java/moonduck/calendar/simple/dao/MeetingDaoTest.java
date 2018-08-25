@@ -38,19 +38,17 @@ public class MeetingDaoTest {
 		room = roomDao.save(new Room().setName("회의실1"));
 		//07-18(수) ~ 07-25(수), 09:00 ~ 13:00, 수요일 반복
 		Meeting meeting1 = prepareMeeting(LocalDate.of(2018, 7, 18), LocalDate.of(2018, 7, 25), 
-				LocalTime.of(9, 0), LocalTime.of(13, 0));
+				LocalTime.of(9, 0), LocalTime.of(13, 0), room);
 		Recurrence recurEntity = prepareRecurrence(RecurrenceType.ONCE_A_WEEK, DayOfWeek.WEDNESDAY, null);
-		meeting1.setRecurrence(recurEntity).setMeetingRoom(room);
+		meeting1.setRecurrence(recurEntity);
 
 		//07-23(월) ~ 07-30(월), 10:00 ~ 15:00, 반복 없음
-		Meeting meeting2 = prepareMeeting(LocalDate.of(2018, 7, 23), LocalDate.of(2018, 7, 30), 
-				LocalTime.of(10, 0), LocalTime.of(15, 0));
-		meeting2.setMeetingRoom(room);
+		prepareMeeting(LocalDate.of(2018, 7, 23), LocalDate.of(2018, 7, 30), 
+				LocalTime.of(10, 0), LocalTime.of(15, 0), room);
 
 		//07-12(목) ~ 07-26(목), 11:00 ~ 12:00, 목요일 반복 
-		Meeting meeting3 = prepareMeeting(LocalDate.of(2018, 7, 12), LocalDate.of(2018, 7, 26), 
-				LocalTime.of(11, 0), LocalTime.of(12, 0));
-		meeting3.setMeetingRoom(room);
+		prepareMeeting(LocalDate.of(2018, 7, 12), LocalDate.of(2018, 7, 26), 
+				LocalTime.of(11, 0), LocalTime.of(12, 0), room);
 	}
 	
 	@Test
@@ -79,12 +77,16 @@ public class MeetingDaoTest {
 	}
 
 	private Meeting prepareMeeting(LocalDate startDate, LocalDate endDate,
-			LocalTime startTime, LocalTime endTime) {
+			LocalTime startTime, LocalTime endTime, Room room) {
 		return meetingDao.save(new Meeting()
 				.setStartDate(startDate)
 				.setEndDate(endDate)
 				.setStartTime(startTime)
-				.setEndTime(endTime));
+				.setEndTime(endTime)
+				.setUserName("예약자")
+				.setEnabled(true)
+				.setModifiedTimeToServerTime()
+				.setMeetingRoom(room));
 	}
 
 	private Recurrence prepareRecurrence(RecurrenceType type, DayOfWeek dayOfWeek, Integer count) {

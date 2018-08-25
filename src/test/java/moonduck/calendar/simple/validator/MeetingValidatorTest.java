@@ -8,7 +8,6 @@ import java.time.LocalTime;
 import org.junit.Test;
 
 import moonduck.calendar.simple.dto.MeetingDto;
-import moonduck.calendar.simple.dto.RoomDto;
 
 public class MeetingValidatorTest {
 
@@ -18,7 +17,7 @@ public class MeetingValidatorTest {
 			.setEndDate(LocalDate.now())
 			.setStartTime(LocalTime.of(0, 0))
 			.setEndTime(LocalTime.of(1, 0))
-			.setMeetingRoom(new RoomDto().setName("회의실"));
+			.setMeetingRoom(1);
 		
 		assertFalse(new MeetingValidator().isValid(invalidMeeting, null));
 	}
@@ -29,7 +28,7 @@ public class MeetingValidatorTest {
 			.setStartDate(LocalDate.now())
 			.setStartTime(LocalTime.of(0, 0))
 			.setEndTime(LocalTime.of(1, 0))
-			.setMeetingRoom(new RoomDto().setName("회의실"));
+			.setMeetingRoom(1);
 		
 		assertFalse(new MeetingValidator().isValid(invalidMeeting, null));
 	}
@@ -40,7 +39,7 @@ public class MeetingValidatorTest {
 			.setStartDate(LocalDate.of(2018, 1, 1))
 			.setEndDate(LocalDate.of(2018, 2, 1))
 			.setEndTime(LocalTime.of(1, 0))
-			.setMeetingRoom(new RoomDto().setName("회의실"));
+			.setMeetingRoom(1);
 		
 		assertFalse(new MeetingValidator().isValid(invalidMeeting, null));
 	}
@@ -51,18 +50,7 @@ public class MeetingValidatorTest {
 			.setStartDate(LocalDate.of(2018, 1, 1))
 			.setEndDate(LocalDate.of(2018, 2, 1))
 			.setStartTime(LocalTime.of(1, 0))
-			.setMeetingRoom(new RoomDto().setName("회의실"));
-		
-		assertFalse(new MeetingValidator().isValid(invalidMeeting, null));
-	}
-	
-	@Test
-	public void 회의실이_null이면_invalid() {
-		MeetingDto invalidMeeting = new MeetingDto()
-			.setStartDate(LocalDate.of(2018, 1, 1))
-			.setEndDate(LocalDate.of(2018, 2, 1))
-			.setStartTime(LocalTime.of(0, 0))
-			.setEndTime(LocalTime.of(1, 0));
+			.setMeetingRoom(1);
 		
 		assertFalse(new MeetingValidator().isValid(invalidMeeting, null));
 	}
@@ -74,7 +62,7 @@ public class MeetingValidatorTest {
 			.setEndDate(LocalDate.of(2018, 1, 1))
 			.setStartTime(LocalTime.of(0, 0))
 			.setEndTime(LocalTime.of(1, 0))
-			.setMeetingRoom(new RoomDto().setName("회의실"));
+			.setMeetingRoom(1);
 		
 		assertFalse(new MeetingValidator().isValid(invalidMeeting, null));
 	}
@@ -86,7 +74,7 @@ public class MeetingValidatorTest {
 			.setEndDate(LocalDate.of(2018, 2, 1))
 			.setStartTime(LocalTime.of(1, 0))
 			.setEndTime(LocalTime.of(0, 0))
-			.setMeetingRoom(new RoomDto().setName("회의실"));
+			.setMeetingRoom(1);
 		
 		assertFalse(new MeetingValidator().isValid(invalidMeeting, null));
 	}
@@ -98,7 +86,7 @@ public class MeetingValidatorTest {
 			.setEndDate(LocalDate.of(2018, 2, 1))
 			.setStartTime(LocalTime.of(1, 0))
 			.setEndTime(LocalTime.of(1, 0))
-			.setMeetingRoom(new RoomDto().setName("회의실"));
+			.setMeetingRoom(1);
 		
 		assertFalse(new MeetingValidator().isValid(invalidMeeting, null));
 	}
@@ -110,7 +98,7 @@ public class MeetingValidatorTest {
 			.setEndDate(LocalDate.of(2018, 2, 1))
 			.setStartTime(LocalTime.of(0, 10))
 			.setEndTime(LocalTime.of(0, 30))
-			.setMeetingRoom(new RoomDto().setName("회의실"));
+			.setMeetingRoom(1);
 		
 		assertFalse(new MeetingValidator().isValid(invalidMeeting, null));
 	}
@@ -122,7 +110,7 @@ public class MeetingValidatorTest {
 			.setEndDate(LocalDate.of(2018, 2, 1))
 			.setStartTime(LocalTime.of(0, 0))
 			.setEndTime(LocalTime.of(0, 10))
-			.setMeetingRoom(new RoomDto().setName("회의실"));
+			.setMeetingRoom(1);
 		
 		assertFalse(new MeetingValidator().isValid(invalidMeeting, null));
 	}

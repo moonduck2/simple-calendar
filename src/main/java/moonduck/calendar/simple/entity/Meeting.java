@@ -5,6 +5,7 @@ import java.time.LocalTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Index;
@@ -31,10 +32,12 @@ public class Meeting {
 	@GeneratedValue
 	private Integer id;
 	
+	@NotNull
 	@Column(name = "start_date", nullable = false)
 	@DateTimeFormat(iso = ISO.DATE)
 	private LocalDate startDate;
 	
+	@NotNull
 	@Column(name = "end_date", nullable = false)
 	@DateTimeFormat(iso = ISO.DATE)
 	private LocalDate endDate;
@@ -55,6 +58,7 @@ public class Meeting {
 	@Column(length = 1000)
 	private String content;
 	
+	@NotNull
 	@Column(name = "enabled")
 	private boolean enabled;
 	
@@ -62,14 +66,15 @@ public class Meeting {
 	@Column(name = "modified_time")
 	private long modifiedTime;
 	
-	@Column(name = "user_name")
+	@NotNull
+	@Column(name = "user_name", length = 10)
 	private String userName;
 	
 	@OneToOne
 	@JoinColumn(name = "recur_id")
 	private Recurrence recurrence;
 	
-	@ManyToOne
+	@ManyToOne(optional = false)
 	@JoinColumn(name = "room_id")
 	private Room meetingRoom;
 
@@ -192,21 +197,11 @@ public class Meeting {
 				.setStartTime(startTime)
 				.setEndTime(endTime)
 				.setTitle(title)
-				.setContent(content);
+				.setContent(content)
+				.setUserName(userName);
 		if (this.recurrence != null) {
 			dto.setRecurrence(recurrence.toDto());
 		}
 		return dto;
-	}
-	public Meeting update(Meeting value) {
-		this.startDate = value.startDate;
-		this.endDate = value.endDate;
-		this.startTime = value.startTime;
-		this.endTime = value.endTime;
-		this.meetingRoom = value.meetingRoom;
-		this.title = value.title;
-		this.content = value.content;
-		this.recurrence = value.recurrence;
-		return this;
 	}
 }

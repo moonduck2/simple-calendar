@@ -88,7 +88,7 @@ public class MeetingServiceTest {
 		when(dto.getEndDate()).thenReturn(LocalDate.MIN);
 		when(dto.getStartTime()).thenReturn(LocalTime.MAX);
 		when(dto.getEndTime()).thenReturn(LocalTime.MIN);
-		when(dto.getMeetingRoom()).thenReturn(mock(RoomDto.class));
+		when(dto.getMeetingRoom()).thenReturn(1);
 		return dto;
 	}
 	
