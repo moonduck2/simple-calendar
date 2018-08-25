@@ -3,6 +3,7 @@ package moonduck.calendar.simple.dao;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -16,6 +17,7 @@ public interface RoomDao extends CrudRepository<Room, Integer> {
 	 * @param dayOfWeek 기준일자의 요일
 	 * @return 모든 회의실
 	 */
+	@EntityGraph(attributePaths = {"meetings", "meetings.recurrence"})
 	@Query("select distinct r from Room r left join r.meetings m left join m.recurrence rec where m.meetingRoom is null"
 			+ " or (m.enabled = true and m.startDate <= :baseDate and m.endDate >= :baseDate)")
 	List<Room> findAllPossibleMeetingsAtDateOfAllRooms(@Param("baseDate") LocalDate date);

@@ -70,11 +70,11 @@ public class Meeting {
 	@Column(name = "user_name", length = 10)
 	private String userName;
 	
-	@OneToOne
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "recur_id")
 	private Recurrence recurrence;
 	
-	@ManyToOne(optional = false)
+	@ManyToOne(optional = false, fetch = FetchType.LAZY)
 	@JoinColumn(name = "room_id")
 	private Room meetingRoom;
 
