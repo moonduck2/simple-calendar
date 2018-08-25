@@ -19,8 +19,14 @@
 <body>
 	<div id="controlBoxArea" class="container">
 		<div class="row">
-			<div id="today" class="col-xl text-center">
-		   	<h2>{{today}}</h2>
+			<div class="col-xs">
+				<button id="prevDate" type="button" class="btn btn-info">어제</button>
+			</div>
+			<div id="today" class="col-xl text-center" data-today="">
+				   	<h2></h2>
+		  </div>
+		  <div class="col-xs">
+		  	<button id="nextDate" type="button" class="btn btn-info">내일</button>
 		  </div>
 			<div class="col-4">
 				<form id="registerRoom">
@@ -268,8 +274,12 @@
 			function setAllMeetingRoom(roomList) {
 				$("#roomSelectBox").html(generateMeetingRoomOptions(roomList))
 			}
-			function init() {
-				var today = new Date(), todayStr = today.getFullYear()
+			function modifyDate(dateStr) {
+				$("#today h2").text(dateStr);
+				$("#today").data("today", dateStr);
+			}
+			function init(today) {
+				var todayStr = today.getFullYear()
 					+ "-" + ("0" + (today.getMonth() + 1)).slice(-2)
 					+ "-" + ("0" + today.getDate()).slice(-2);
 				
@@ -277,13 +287,12 @@
 					url : "http://localhost:8080/api/meeting?date=" + todayStr,
 					crossDomain : true,
 					success : function(data) {
-						console.log(data)
 						var templateData;
 						setAllMeetingRoom(data);
 						
 						templateData = buildRoomsOccupation(data);
-						templateData.today = todayStr;
 						$("#timeTableArea").html(timeTableTemplate(templateData));
+						modifyDate(todayStr)
 					}
 				})	
 			}
@@ -296,6 +305,24 @@
 				$("#newMeetingStartTime").val('');
 				$("#newMeetingEndTime").val('');
 			}
+			function parseDate(date) {
+				return new Date(parseInt(date.substring(0, 4)), parseInt(date.substring(5, 7)) - 1, 
+						parseInt(date.substring(8)));
+			}
+			function prevDate(date) {
+				return new Date(date.getTime() - 24 * 60 * 60 * 1000)
+			}
+			function nextDate(date) {
+				return new Date(date.getTime() + 24 * 60 * 60 * 1000)
+			}
+			$("#prevDate").click(function(e) {
+				var curDate = parseDate($("#today").data("today"));
+				init(prevDate(curDate));
+			});
+			$("#nextDate").click(function(e) {
+				var curDate = parseDate($("#today").data("today"));
+				init(nextDate(curDate));
+			});
 			$("#registerMeeting").submit(function(e) {
 				e.preventDefault();
 				var data = {
@@ -328,7 +355,8 @@
 					error : function(xhr, textStatus, errorThrown) {
 						if (xhr.responseJSON.message === "선점실패") {
 							alert("이미 예약된 시간입니다");
-							init();
+							
+							init(parseDate($("#today").data("today")));
 						}
 					}
 				})
@@ -350,7 +378,7 @@
 					}),
 					success : function(data) {
 						$("#newRoomName").val('')
-						init();
+						init(parseDate($("#today").data("today")));
 					}
 				})
 				return false;
@@ -364,7 +392,7 @@
         	$radio.attr('disabled', true)
         }
     });
-			init();
+			init(new Date());
 		})
 	</script>
 </body>
