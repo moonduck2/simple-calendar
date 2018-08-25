@@ -91,15 +91,45 @@
 		</div>
 		<button type="submit" class="btn btn-primary">Submit</button>
 	</form>
-
+	<div id="timeTableArea"></div>
 	<script id="roomList" type="text/x-handlebars-template">
-		{{#each @root}}
-			<option data-room-id={{id}}>{{name}}</option>
-		{{/each}}
+		<div class="content">
+		    <div class="container">
+		        <div class="row">
+		            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 text-center mb30">
+		            	<h2>{{today}}</h2>
+		            </div>
+		            <div class="table-responsive">
+		                <table class="timetable table table-striped ">
+		                    <thead>
+		                        <tr class="text-center">
+		                            <th scope="col"></th>
+		                        {{#each roomNames}}
+		                            <th scope="col">{{this}}</th>
+		                        {{/each}}
+		                        </tr>
+		                    </thead>
+		                    <tbody>
+													{{#each timeTable}}
+		                        <tr>
+		                            <th scope="row">{{time}}</th>
+															{{#each schedule}}
+		                            <td>{{this}}</td>
+															{{/each}}
+		                        </tr>
+													{{/each}}
+		                    </tbody>
+		                </table>
+		            </div>
+		            <!-- timetable -->
+		        </div>
+		    </div>
+		</div>
 	</script>
 	<script>
 		$(document).ready(function() {
-			var meetingRoomListTemplate = Handlebars.compile($("#roomList").html());
+			var meetingRoomListTemplate = Handlebars.compile($("#roomList").html()),
+				timeTableTemplate = Handlebars.compile($("#roomList").html());
 			
 			//HH:mm format
 			function minutesOfDay(time) {
@@ -150,10 +180,12 @@
 					maxEndTime = 24 * 60;
 				}
 				for (i = 0, next = minStartTime; next < maxEndTime; i++, next += 30) {
-					timeTable[i] = new Array(rooms.length + 1);
-					timeTable[i][0] = toTimeStr(next);
-					for (j = 1; j <= rooms.length; j++) {
-						timeTable[i][j] = "";
+					timeTable[i] = {
+							"schedule" : new Array(rooms.length),
+							"time" : toTimeStr(next) 
+					}
+					for (j = 0; j < rooms.length; j++) {
+						timeTable[i].schedule[j] = "";
 					}
 				}
 				for (i = 0; i < meetings.length; i++) {
@@ -163,7 +195,7 @@
 					next = startTimeMinutes;
 					content = toReservationText(meetings[i]);
 					while (next < endTimeMinutes) {
-						timeTable[parseInt((next - minStartTime) / 30)][roomIdx + 1] = content;
+						timeTable[parseInt((next - minStartTime) / 30)].schedule[roomIdx] = content;
 						next += 30;
 					}
 				}
@@ -172,8 +204,8 @@
 					"timeTable" : timeTable
 				}
 			}
-			function setAllMeetingRoom(roomList) {
-				$("#roomSelectBox").html(meetingRoomListTemplate(roomList))
+			function setAllMeetingRoom(timeTable) {
+				$("#roomSelectBox").html(meetingRoomListTemplate(timeTable))
 			}
 			function init() {
 				var today = new Date(), todayStr = today.getFullYear()
@@ -184,7 +216,12 @@
 					url : "http://localhost:8080/api/meeting?date=" + todayStr,
 					crossDomain : true,
 					success : function(data) {
-						setAllMeetingRoom(data)
+						var templateData;
+						setAllMeetingRoom(templateData);
+						
+						templateData = buildRoomsOccupation(data);
+						templateData.today = todayStr;
+						$("#timeTableArea").html(timeTableTemplate(templateData));
 					}
 				})	
 			}
