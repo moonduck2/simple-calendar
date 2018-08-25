@@ -1,5 +1,8 @@
 package moonduck.calendar.simple.exception;
 
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(reason = "선점실패")
 public class MeetingDuplicationException extends RuntimeException {
 
 	/**
