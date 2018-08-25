@@ -1,87 +1,93 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="UTF-8">
-	<title>Meeting room</title>
-	
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-	<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-	<script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
+<meta charset="UTF-8">
+<title>Meeting room</title>
+
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+<script type="text/javascript"
+	src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript"
+	src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+<script type="text/javascript"
+	src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
 
 </head>
 <body>
 	<form id="register_room">
 		<div class="form-group">
-			<label for="newRoomName">회의실 등록</label> 
-			<input type="text" class="form-control" id="newRoomName" placeholder="Enter room name"> 
+			<label for="newRoomName">회의실 등록</label> <input type="text"
+				class="form-control" id="newRoomName" placeholder="Enter room name">
 		</div>
 		<button type="submit" class="btn btn-primary">Submit</button>
 	</form>
-	
+
 	<form id="register_meeting">
 		<div class="form-group">
-			<label for="newMeetingTitle">회의명</label> 
-			<input type="text" class="form-control" id="newMeetingTitle" placeholder="Enter meeting title">
-			
-			<label for="newMeetingContent">회의 요약</label>
+			<label for="newMeetingTitle">회의명</label> <input type="text"
+				class="form-control" id="newMeetingTitle"
+				placeholder="Enter meeting title"> <label
+				for="newMeetingContent">회의 요약</label>
 			<textarea class="form-control" rows="5" id="newMeetingContent"></textarea>
-			
-			<label for="newMeetingOwner">주최자</label>
-			<input class="form-control" id="newMeetingOwner">
 
-			<label for="newMeetingStartDatePicker">시작일</label>
+			<label for="newMeetingOwner">주최자</label> <input class="form-control"
+				id="newMeetingOwner"> <label for="newMeetingStartDatePicker">시작일</label>
 			<div class='input-group date' id='newMeetingStartDatePicker'>
-				<input type='text' class="form-control" id="newMeetingStartDate"/> 
-				<span	class="input-group-addon"> 
-					<span class="glyphicon glyphicon-calendar"></span>
+				<input type='text' class="form-control" id="newMeetingStartDate" />
+				<span class="input-group-addon"> <span
+					class="glyphicon glyphicon-calendar"></span>
 				</span>
 			</div>
-			
+
 			<label for="newMeetingEndDatePicker">종료일</label>
 			<div class='input-group date' id='newMeetingEndDatePicker'>
-				<input type='text' class="form-control" id="newMeetingEndDate"/> 
-				<span	class="input-group-addon"> 
-					<span class="glyphicon glyphicon-calendar"></span>
+				<input type='text' class="form-control" id="newMeetingEndDate" /> <span
+					class="input-group-addon"> <span
+					class="glyphicon glyphicon-calendar"></span>
 				</span>
 			</div>
-			
+
 			<label for="newMeetingStartTimePicker">시작시간</label>
 			<div class='input-group date' id='newMeetingStartTimePicker'>
-				<input type='text' class="form-control" id="newMeetingStartTime"/> 
-				<span	class="input-group-addon"> 
-					<span class="glyphicon glyphicon-calendar"></span>
+				<input type='text' class="form-control" id="newMeetingStartTime" />
+				<span class="input-group-addon"> <span
+					class="glyphicon glyphicon-calendar"></span>
 				</span>
 			</div>
-			
+
 			<label for="newMeetingEndTimePicker">종료시간</label>
 			<div class='input-group date' id='newMeetingEndTimePicker'>
-				<input type='text' class="form-control" id="newMeetingEndTime"/> 
-				<span	class="input-group-addon"> 
-					<span class="glyphicon glyphicon-calendar"></span>
+				<input type='text' class="form-control" id="newMeetingEndTime" /> <span
+					class="input-group-addon"> <span
+					class="glyphicon glyphicon-calendar"></span>
 				</span>
 			</div>
-			
+
 			<label for="newMeetingAllRooms">회의실</label>
 			<div class="form-group" id="newMeetingAllRooms">
-			  <select class="form-control" id="roomSelectBox">
-			  </select>
+				<select class="form-control" id="roomSelectBox">
+				</select>
 			</div>
-			
+
 			<label for="newMeetingRecurrence">반복설정</label>
 			<div class="form-group" id="newMeetingRecurrence">
-				<label class="checkbox-inline"><input type="checkbox" value="" id="isRecurrence">반복</label>
-			  <label><input type="radio" name="recurrenceDayOfWeek" data-order=1 disabled>월</label>
-			  <label><input type="radio" name="recurrenceDayOfWeek" data-order=2 disabled>화</label>
-			  <label><input type="radio" name="recurrenceDayOfWeek" data-order=3 disabled>수</label>
-			  <label><input type="radio" name="recurrenceDayOfWeek" data-order=4 disabled>목</label>
-			  <label><input type="radio" name="recurrenceDayOfWeek" data-order=5 disabled>금</label>
-			  <label><input type="radio" name="recurrenceDayOfWeek" data-order=6 disabled>토</label>
-			  <label><input type="radio" name="recurrenceDayOfWeek" data-order=7 disabled>일</label>
-			  <label><input type="number" id=recurrenceNumber>반복횟수</label>
+				<label class="checkbox-inline"><input type="checkbox"
+					value="" id="isRecurrence">반복</label> <label><input
+					type="radio" name="recurrenceDayOfWeek" data-order=1 disabled>월</label>
+				<label><input type="radio" name="recurrenceDayOfWeek"
+					data-order=2 disabled>화</label> <label><input type="radio"
+					name="recurrenceDayOfWeek" data-order=3 disabled>수</label> <label><input
+					type="radio" name="recurrenceDayOfWeek" data-order=4 disabled>목</label>
+				<label><input type="radio" name="recurrenceDayOfWeek"
+					data-order=5 disabled>금</label> <label><input type="radio"
+					name="recurrenceDayOfWeek" data-order=6 disabled>토</label> <label><input
+					type="radio" name="recurrenceDayOfWeek" data-order=7 disabled>일</label>
+				<label><input type="number" id=recurrenceNumber>반복횟수</label>
 			</div>
-			
+
 		</div>
 		<button type="submit" class="btn btn-primary">Submit</button>
 	</form>
@@ -95,6 +101,77 @@
 		$(document).ready(function() {
 			var meetingRoomListTemplate = Handlebars.compile($("#roomList").html());
 			
+			//HH:mm format
+			function minutesOfDay(time) {
+				var timeSplit = time.split(":");
+				return parseInt(timeSplit[0]) * 60 + parseInt(timeSplit[1]);
+			}
+			
+			function toTimeStr(time) {
+				return parseInt(time / 60) + ":" + ("0" + time % 60).slice(-2);
+			}
+			
+			function toReservationText(meeting) {
+				return (meeting.title ? meeting.title : "제목없음") 
+					+ "( " + meeting.userName + " ~" + meeting.endTime + ")";
+			}
+			
+			function addAll(source, dest) {
+				var i;
+				for (i = 0; i < source.length; i++) {
+					dest.push(source[i]);
+				}
+			}
+			function buildRoomsOccupation(rooms) {
+				var i, j, next, roomList = [], meetings = [], timeTable = [], content,
+					minStartTime, maxEndTime, roomOrder = {}, startTime, endTime, roomIdx,
+					startTimeMinutes, endTimeMinutes;
+				if (!rooms || !rooms.length) {
+					return [];
+				}
+
+				for (i = 0; i < rooms.length; i++) {
+					roomList.push(rooms[i].name);
+					roomOrder[rooms[i].id] = i;
+					if (rooms[i].meetings) {
+						addAll(rooms[i].meetings, meetings);
+					}
+				}
+				meetings.sort(function(m1, m2) {
+					var compare = m1.startTime.localeCompare(m2.startTime);
+					return compare != 0 ? compare : m1.endTime.localeCompare(m2);
+				});
+				
+				if (meetings.length) {
+					minStartTime = minutesOfDay(meetings[0].startTime);
+					maxEndTime = minutesOfDay(meetings[meetings.length - 1].endTime);
+				} else {
+					minStartTime = 0;
+					maxEndTime = 24 * 60;
+				}
+				for (i = 0, next = minStartTime; next < maxEndTime; i++, next += 30) {
+					timeTable[i] = new Array(rooms.length + 1);
+					timeTable[i][0] = toTimeStr(next);
+					for (j = 1; j <= rooms.length; j++) {
+						timeTable[i][j] = "";
+					}
+				}
+				for (i = 0; i < meetings.length; i++) {
+					startTimeMinutes = minutesOfDay(meetings[i].startTime);
+					endTimeMinutes = minutesOfDay(meetings[i].endTime);
+					roomIdx = roomOrder[meetings[i].meetingRoom];
+					next = startTimeMinutes;
+					content = toReservationText(meetings[i]);
+					while (next < endTimeMinutes) {
+						timeTable[parseInt((next - minStartTime) / 30)][roomIdx + 1] = content;
+						next += 30;
+					}
+				}
+				return {
+					"roomNames" : roomList,
+					"timeTable" : timeTable
+				}
+			}
 			function setAllMeetingRoom(roomList) {
 				$("#roomSelectBox").html(meetingRoomListTemplate(roomList))
 			}
@@ -107,7 +184,6 @@
 					url : "http://localhost:8080/api/meeting?date=" + todayStr,
 					crossDomain : true,
 					success : function(data) {
-						console.log(data)
 						setAllMeetingRoom(data)
 					}
 				})	
@@ -131,9 +207,7 @@
 						userName : $("#newMeetingOwner").val(),
 						startTime : $("#newMeetingStartTime").val(),
 						endTime : $("#newMeetingEndTime").val(),
-						meetingRoom: {
-							id : $("#roomSelectBox option:selected").data('room-id')
-						},
+						meetingRoom: parseInt($("#roomSelectBox option:selected").data('room-id'))
 				};
 				if($("#isRecurrence").is(":checked")) {
 					data.recurrence = {
