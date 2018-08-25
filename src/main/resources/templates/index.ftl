@@ -128,8 +128,7 @@
 	</script>
 	<script>
 		$(document).ready(function() {
-			var meetingRoomListTemplate = Handlebars.compile($("#roomList").html()),
-				timeTableTemplate = Handlebars.compile($("#roomList").html());
+			var timeTableTemplate = Handlebars.compile($("#roomList").html());
 			
 			//HH:mm format
 			function minutesOfDay(time) {
@@ -140,7 +139,13 @@
 			function toTimeStr(time) {
 				return parseInt(time / 60) + ":" + ("0" + time % 60).slice(-2);
 			}
-			
+			function generateMeetingRoomOptions(roomList) {
+				var option = '', i;
+				for (i = 0; i < roomList.length; i++) {
+					option += ("<option data-room-id=" + roomList[i].id + ">" + roomList[i].name + "</option>");
+				}
+				return option;
+			}
 			function toReservationText(meeting) {
 				return (meeting.title ? meeting.title : "제목없음") 
 					+ "( " + meeting.userName + " ~" + meeting.endTime + ")";
@@ -204,8 +209,8 @@
 					"timeTable" : timeTable
 				}
 			}
-			function setAllMeetingRoom(timeTable) {
-				$("#roomSelectBox").html(meetingRoomListTemplate(timeTable))
+			function setAllMeetingRoom(roomList) {
+				$("#roomSelectBox").html(generateMeetingRoomOptions(roomList))
 			}
 			function init() {
 				var today = new Date(), todayStr = today.getFullYear()
@@ -216,8 +221,9 @@
 					url : "http://localhost:8080/api/meeting?date=" + todayStr,
 					crossDomain : true,
 					success : function(data) {
+						console.log(data)
 						var templateData;
-						setAllMeetingRoom(templateData);
+						setAllMeetingRoom(data);
 						
 						templateData = buildRoomsOccupation(data);
 						templateData.today = todayStr;
@@ -262,6 +268,12 @@
 					success : function(data) {
 						clearNewMeeting()
 						//init();
+					},
+					error : function(xhr, textStatus, errorThrown) {
+						if (xhr.responseJSON.message === "선점실패") {
+							alert("이미 예약된 시간입니다");
+							init();
+						}
 					}
 				})
 				return false;
