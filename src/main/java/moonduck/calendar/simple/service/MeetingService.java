@@ -1,7 +1,7 @@
 package moonduck.calendar.simple.service;
 
 import java.time.LocalDate;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -13,7 +13,6 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import moonduck.calendar.simple.dao.MeetingDao;
 import moonduck.calendar.simple.dao.RecurrenceDao;
@@ -65,7 +64,7 @@ public class MeetingService {
 		
 		Meeting meetingEntity = saveMeeting(meeting, false);
 
-		List<Meeting> possibleDuplicate = meetingDao.findAllMeetingInDate(
+		List<Meeting> possibleDuplicate = meetingDao.findAllMeetingInDateAndTime(
 				meeting.getMeetingRoom().getId(), 
 				meeting.getStartDate(), meeting.getEndDate(),
 				meeting.getStartTime(), meeting.getEndTime());
@@ -115,15 +114,20 @@ public class MeetingService {
 	/**
 	 * 특정날짜의 회의를 조회한다.
 	 * @param date 기준일자
-	 * @param rooms 회의실
-	 * @return 회의실별 일정 리스트
+	 * @return 모든 회의실의 일정 리스트
 	 */
-	public List<RoomDto> findMeetingByDate(LocalDate date, Collection<Integer> rooms) {
-		List<Room> allMeetings = CollectionUtils.isEmpty(rooms) 
-				? roomDao.findMeetingsEachRooms(date, date.getDayOfWeek().getValue())
-				: roomDao.findMeetingsEachRooms(date, date.getDayOfWeek().getValue(), rooms);
-				
-		return allMeetings.stream().map(entity -> entity.toDto()).collect(Collectors.toList());
+	public List<RoomDto> findAllMeetingOfAllRoomsAtDate(LocalDate date) {
+		List<Room> allMeetings = roomDao.findAllPossibleMeetingsAtDateOfAllRooms(date);
+		return allMeetings.stream()
+				//모든 룸을 가져오되
+				.map(roomEntity -> roomEntity.toDto().setMeetings(
+						Optional.ofNullable(roomEntity.getMeetings()).orElseGet(() -> Collections.emptyList())
+						//date에 날짜가 있을 법한 모든 회의 중에서 실제로 있는 회의만 filter를 통과한다
+						.stream()
+							.filter(meetingEntity -> recurChecker.isOccur(date, meetingEntity))
+							.map(meetingEntity -> meetingEntity.toDto())
+							.collect(Collectors.toList())))
+				.collect(Collectors.toList());
 	}
 	
 	@Transactional

@@ -5,7 +5,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +26,17 @@ public class RecurrenceService {
 		this.recurrenceServiceMap = serviceMap;
 	}
 	
+	/**
+	 * 특정 날짜에 회의가 있는지 여부를 알려준다
+	 * TODO: UnitTest
+	 * @param baseDate 기준일
+	 * @param meeting 회의Entity
+	 * @return baseDate가 회의가 있는 날일 경우 true
+	 */
+	public boolean isOccur(LocalDate baseDate, Meeting meeting) {
+		return recurrenceServiceMap.get(meeting.getRecurrence() == null ? RecurrenceType.EVERYDAY_IN_RANGE
+				: meeting.getRecurrence().getType()).isOccur(baseDate, meeting, meeting.getRecurrence());
+	}
 	/**
 	 * 리스트 안에서 baseMeeting과 회의가 겹치는 것 중 가장 먼저 예약된 1개를 리턴한다
 	 * @param baseMeeting 기준회의

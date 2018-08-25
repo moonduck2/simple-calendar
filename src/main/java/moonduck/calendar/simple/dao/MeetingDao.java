@@ -21,7 +21,7 @@ public interface MeetingDao extends CrudRepository<Meeting, Integer> {
 	@Query("select m from Meeting m where m.meetingRoom.id = :room"
 			+ " and ((m.startDate <= :startDate and m.endDate >= :startDate) or (m.startDate <= :endDate and m.endDate >= :endDate))"
 			+ " and ((m.startTime <= :startTime and m.endTime > :startTime) or (m.startTime < :endTime and m.endTime >= :endTime))")
-	List<Meeting> findAllMeetingInDate(@Param("room") int roomId, 
+	List<Meeting> findAllMeetingInDateAndTime(@Param("room") int roomId, 
 			@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, 
 			@Param("startTime") LocalTime baseTime, @Param("endTime") LocalTime endTime);
 }

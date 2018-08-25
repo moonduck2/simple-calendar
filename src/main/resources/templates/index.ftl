@@ -150,7 +150,7 @@
 					data : JSON.stringify(data),
 					success : function(data) {
 						clearNewMeeting()
-						init();
+						//init();
 					}
 				})
 				return false;

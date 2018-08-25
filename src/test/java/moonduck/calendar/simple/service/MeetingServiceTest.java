@@ -3,11 +3,10 @@ package moonduck.calendar.simple.service;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.Test;
@@ -23,6 +22,7 @@ import moonduck.calendar.simple.dao.RoomDao;
 import moonduck.calendar.simple.dto.MeetingDto;
 import moonduck.calendar.simple.dto.RoomDto;
 import moonduck.calendar.simple.entity.Meeting;
+import moonduck.calendar.simple.entity.Recurrence;
 import moonduck.calendar.simple.entity.Room;
 import moonduck.calendar.simple.exception.MeetingDuplicationException;
 
@@ -98,20 +98,56 @@ public class MeetingServiceTest {
 		return Optional.of(mockMeeting);
 	}
 
-	//meetingDao의 쿼리 수행 결과를 그대로 리턴하는지 테스트
+	//meetingDao의 쿼리 수행 결과 중 기준 날짜에 회의가 있는 회의만 뽑아오는지 테스트
 	@Test
-	public void 기준일의_모든_회의_가져오기() {
-		
-		RoomDto mockRoom = mock(RoomDto.class);
-		Room mockRoomEntity = mock(Room.class);
-		when(mockRoomEntity.toDto()).thenReturn(mockRoom);
-		
-		List<Room> mockMeetings = Arrays.asList(mockRoomEntity);
-		when(roomDao.findMeetingsEachRooms(any(LocalDate.class), any(Integer.class))).thenReturn(mockMeetings);
+	public void 기준일에_실제로_회의가_있는_회의만_뽑아와야_함() {
+		LocalDate baseDate = LocalDate.of(2018, 7, 17);
+		Room room1 = new Room()
+				.setId(1)
+				.setName("회의실1");
 
-		//LocalDate.now는 의미 없는 값임, 회의실을 지정하지 않을 경우 모든 회의실의 일정을 조회함
-		assertEquals(Arrays.asList(mockRoom), 
-				service.findMeetingByDate(LocalDate.now(), Collections.emptyList()));
+		//기준일이 startDate와 endDate 사이에 있으나 기준일은 회의가 없는 날
+		Meeting notOccured = new Meeting()
+				.setStartDate(LocalDate.of(2018, 7, 1))
+				.setEndDate(LocalDate.of(2018, 7, 31))
+				.setRecurrence(new Recurrence().setDayOfWeek(DayOfWeek.SUNDAY.getValue()))
+				.setMeetingRoom(room1);
+		when(mockRecurChecker.isOccur(eq(baseDate), eq(notOccured))).thenReturn(false);
+		
+		//기준일이 startDate와 endDate 사이에 있음
+		Meeting occured = new Meeting()
+				.setStartDate(LocalDate.of(2018, 7, 15))
+				.setEndDate(LocalDate.of(2018, 7, 20))
+				.setMeetingRoom(room1);
+		when(mockRecurChecker.isOccur(eq(baseDate), eq(occured))).thenReturn(true);
+
+		room1.setMeetings(Arrays.asList(notOccured, occured));
+		
+		when(roomDao.findAllPossibleMeetingsAtDateOfAllRooms(any(LocalDate.class))).thenReturn(Arrays.asList(room1));
+
+		RoomDto expected = new RoomDto()
+				.setId(1)
+				.setName("회의실1");
+		expected.setMeetings(Arrays.asList(occured.toDto()));
+		
+		assertEquals(Arrays.asList(expected), 
+				service.findAllMeetingOfAllRoomsAtDate(baseDate));
+	}
+	
+	@Test
+	public void 회의가_없는_회의실도_결과에_포함되어야_함() {
+		LocalDate baseDate = LocalDate.of(2018, 7, 17);
+		Room room1 = new Room()
+				.setId(1)
+				.setName("회의실1");
+		
+		RoomDto expected = room1.toDto();
+		
+		when(roomDao.findAllPossibleMeetingsAtDateOfAllRooms(any(LocalDate.class)))
+			.thenReturn(Arrays.asList(room1));
+
+		assertEquals(Arrays.asList(expected), 
+				service.findAllMeetingOfAllRoomsAtDate(baseDate));
 	}
 	
 	@Test

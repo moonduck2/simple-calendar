@@ -55,7 +55,7 @@ public class MeetingDaoTest {
 	
 	@Test
 	public void 회의가_있을_수_있는_구간_있는_시간을_조회함() {
-		List<Meeting> meetings = meetingDao.findAllMeetingInDate(
+		List<Meeting> meetings = meetingDao.findAllMeetingInDateAndTime(
 				room.getId(), LocalDate.of(2018, 7, 15), LocalDate.of(2018, 7, 25),
 				LocalTime.of(11, 0), LocalTime.of(13, 0));
 		
@@ -63,7 +63,7 @@ public class MeetingDaoTest {
 	}
 	@Test
 	public void 회의가_없는_구간_조회함() {
-		List<Meeting> meetings = meetingDao.findAllMeetingInDate(
+		List<Meeting> meetings = meetingDao.findAllMeetingInDateAndTime(
 				room.getId(), LocalDate.of(2018, 7, 7), LocalDate.of(2018, 7, 11),
 				LocalTime.of(11, 0), LocalTime.of(13, 0));
 		
@@ -71,7 +71,7 @@ public class MeetingDaoTest {
 	}
 	@Test
 	public void 회의가_있는_구간이지만_회의가_없는_시간대를_조회함() {
-		List<Meeting> meetings = meetingDao.findAllMeetingInDate(
+		List<Meeting> meetings = meetingDao.findAllMeetingInDateAndTime(
 				room.getId(), LocalDate.of(2018, 7, 15), LocalDate.of(2018, 7, 25),
 				LocalTime.of(8, 0), LocalTime.of(9, 0));
 

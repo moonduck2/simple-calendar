@@ -1,7 +1,6 @@
 package moonduck.calendar.simple.controller;
 
 import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -30,9 +29,8 @@ public class ApiController {
 	private MeetingService meetingService;
 	
 	@GetMapping
-	public List<RoomDto> getMeetings(@RequestParam @DateTimeFormat(iso = ISO.DATE) LocalDate date, 
-			@RequestParam(required = false) Collection<Integer> rooms) {
-		return meetingService.findMeetingByDate(date, rooms);
+	public List<RoomDto> getMeetings(@RequestParam @DateTimeFormat(iso = ISO.DATE) LocalDate date) {
+		return meetingService.findAllMeetingOfAllRoomsAtDate(date);
 	}
 	
 	@PostMapping

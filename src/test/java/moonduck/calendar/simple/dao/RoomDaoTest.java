@@ -48,39 +48,9 @@ public class RoomDaoTest {
 		Room room2 = new Room().setName("회의없음");
 		room2 = roomDao.save(room2);
 
-		List<Room> rooms = roomDao.findMeetingsEachRooms(
-				LocalDate.of(2018, 7, 4), LocalDate.of(2018, 7, 4).getDayOfWeek().getValue());
+		List<Room> rooms = roomDao.findAllPossibleMeetingsAtDateOfAllRooms(LocalDate.of(2018, 7, 4));
 
 		assertThat(rooms, hasItems(room1, room2));
 		assertEquals(2, rooms.size());
 	}
-
-	@Test
-	public void 일부_회의실의_회의_가져오기() {
-		Room room1 = new Room().setName("회의있음");
-		room1 = roomDao.save(room1);
-
-		meetingDao.save(new Meeting()
-				.setMeetingRoom(room1)
-				.setStartDate(LocalDate.of(2018, 1, 1))
-				.setEndDate(LocalDate.of(2018, 12, 12))
-				.setStartTime(LocalTime.now())
-				.setEndTime(LocalTime.now())
-				.setEnabled(true)
-				.setRecurrence(
-						recurDao.save(new Recurrence()
-								.setType(RecurrenceType.ONCE_A_WEEK)
-								.setCount(1)
-								.setDayOfWeek(DayOfWeek.WEDNESDAY.getValue()))));
-
-		Room room2 = new Room().setName("회의없음");
-		room2 = roomDao.save(room2);
-
-		List<Room> rooms = roomDao.findMeetingsEachRooms(
-				LocalDate.of(2018, 7, 4), LocalDate.of(2018, 7, 4).getDayOfWeek().getValue(),
-				Arrays.asList(room2.getId()));
-
-		assertEquals(Arrays.asList(room2), rooms);
-	}
-
 }

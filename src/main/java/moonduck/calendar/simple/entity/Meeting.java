@@ -192,8 +192,7 @@ public class Meeting {
 				.setStartTime(startTime)
 				.setEndTime(endTime)
 				.setTitle(title)
-				.setContent(content)
-				.setMeetingRoom(meetingRoom.toDto());
+				.setContent(content);
 		if (this.recurrence != null) {
 			dto.setRecurrence(recurrence.toDto());
 		}
