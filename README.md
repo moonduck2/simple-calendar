@@ -1,4 +1,9 @@
 # 빌드
+```bash
+    $> git clone https://github.com/moonduck2/simple-calendar.git calendar
+    $> cd calendar
+    $> ./mvnw package
+```
 
 # 실행
 
