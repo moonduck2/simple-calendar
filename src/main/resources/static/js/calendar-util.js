@@ -27,7 +27,7 @@ var CalendarUtil = {
 		}
 	},
 	buildRoomsOccupation : function(rooms) {
-		var i, j, next, roomList = [], meetings = [], timeTable = [], content,
+		var i, j, prev, next, roomList = [], meetings = [], timeTable = [], content,
 		minStartTime, maxEndTime, roomOrder = {}, startTime, endTime, roomIdx,
 		startTimeMinutes, endTimeMinutes;
 		if (!rooms) {
@@ -41,14 +41,18 @@ var CalendarUtil = {
 				CalendarUtil.addAll(rooms[i].meetings, meetings);
 			}
 		}
-		meetings.sort(function(m1, m2) {
-			var compare = m1.startTime.localeCompare(m2.startTime);
-			return compare != 0 ? compare : m1.endTime.localeCompare(m2);
-		});
 
 		if (meetings.length) {
-			minStartTime = CalendarUtil.minutesOfDay(meetings[0].startTime);
-			maxEndTime = CalendarUtil.minutesOfDay(meetings[meetings.length - 1].endTime);
+			prev = meetings[0];
+			minStartTime = prev.startTime;
+			maxEndTime = prev.endTime;
+			for (i = 1; i < meetings.length; i++) {
+				minStartTime = minStartTime.localeCompare(meetings[i].startTime) < 0 ? minStartTime : meetings[i].startTime;
+				maxEndTime = maxEndTime.localeCompare(meetings[i].endTime) > 0 ? maxEndTime : meetings[i].endTime;
+				prev = meetings[i];
+			}
+			minStartTime = CalendarUtil.minutesOfDay(minStartTime);
+			maxEndTime = CalendarUtil.minutesOfDay(maxEndTime);
 		} else {
 			minStartTime = 0;
 			maxEndTime = 24 * 60;

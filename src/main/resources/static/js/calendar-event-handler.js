@@ -1,6 +1,4 @@
 $(document).ready(function() {
-	var timeTableTemplate = Handlebars.compile($("#roomList").html());
-
 	$("#timeTableArea").on("click", ".modifyMeeting", function(e) {
 		$.ajax({
 			url : "http://localhost:8080/api/meeting/" + $(this).data("meetingId"),
