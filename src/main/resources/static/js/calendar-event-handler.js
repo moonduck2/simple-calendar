@@ -17,7 +17,7 @@ $(document).ready(function() {
 			url : "http://localhost:8080/api/meeting/" + $(this).data("meetingId"),
 			method : "delete",
 			success : function(data) {
-				CalendarUtil.init(currentDate());
+				CalendarUtil.init(CalendarUtil.currentDate());
 			},
 			error : function(xhr, textStatus, errorThrown) {
 				alert(xhr.responseJSON.message)
@@ -49,7 +49,7 @@ $(document).ready(function() {
 				if (xhr.responseJSON.message === "선점실패") {
 					alert("이미 예약된 시간입니다");
 
-					CalendarUtil.init(currentDate());
+					CalendarUtil.init(CalendarUtil.currentDate());
 				}
 			}
 		})
