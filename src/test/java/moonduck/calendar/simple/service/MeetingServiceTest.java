@@ -152,7 +152,18 @@ public class MeetingServiceTest {
 	
 	@Test
 	public void 회의삭제테스트() {
-		service.deleteMeeting(12);
-		verify(meetingDao).deleteById(eq(12));
+		int id = 12;
+		
+		Meeting mockMeeting = mock(Meeting.class);
+		when(mockMeeting.getId()).thenReturn(id);
+		when(meetingDao.findById(id)).thenReturn(Optional.of(mockMeeting));
+		
+		Recurrence recur = mock(Recurrence.class);
+		when(mockMeeting.getRecurrence()).thenReturn(recur);
+		
+		service.deleteMeeting(id);
+		
+		verify(meetingDao).delete(eq(mockMeeting));
+		verify(recurDao).delete(eq(recur));
 	}
 }
