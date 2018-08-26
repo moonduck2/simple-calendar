@@ -121,6 +121,7 @@ var CalendarUtil = {
 		$("#newMeetingOwner").val('');
 		$("#newMeetingStartTime").val('');
 		$("#newMeetingEndTime").val('');
+		CalendarUtil.clearHidden()
 	},
 	parseDate : function(date) {
 		return new Date(parseInt(date.substring(0, 4)), parseInt(date.substring(5, 7)) - 1, 

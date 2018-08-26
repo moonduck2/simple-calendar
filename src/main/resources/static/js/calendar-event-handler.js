@@ -24,6 +24,10 @@ $(document).ready(function() {
 			}
 		})
 	})
+	$("#meetingAbort").click(function(e) {
+		e.preventDefault()
+		CalendarUtil.clearNewMeeting();
+	})
 	$("#prevDate").click(function(e) {
 		var curDate = CalendarUtil.parseDate($("#today").data("today"));
 		CalendarUtil.init(CalendarUtil.prevDate(curDate));

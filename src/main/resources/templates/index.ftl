@@ -143,6 +143,7 @@
 							<input type="hidden" id="meetingIdHidden">
 							<input type="hidden" id="operation" value="post">
 							<button type="submit" class="btn btn-primary">Submit</button>
+							<button id="meetingAbort" class="btn btn-danger">Abort</button>
 						</div>
 					</div>
 				</form>
