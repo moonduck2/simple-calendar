@@ -6,6 +6,18 @@
 ```
 
 # 실행
+```bash
+    java -jar simple-calendar-0.0.1-SNAPSHOT.jar
+```
+초기 샘플 데이터 올려서 실행하기
+```bash
+    java -jar simple-calendar-0.0.1-SNAPSHOT.jar --spring.profiles.active=test
+```
+
+# 어플리케이션 확인
+http://{server address}:8080/meeting (ex. http://localhost:8080/meeting)
+
+
 
 # 문제 해결 전략
 
