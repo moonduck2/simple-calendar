@@ -14,7 +14,6 @@ public interface RoomDao extends CrudRepository<Room, Integer> {
 	/**
 	 * 조건에 만족하는 회의실과 회의들을 조인해서 가져온다. *존재하는 모든 회의실을 가져온다(회의가 없더라도)*.
 	 * @param date 기준일자
-	 * @param dayOfWeek 기준일자의 요일
 	 * @return 모든 회의실
 	 */
 	@EntityGraph(attributePaths = {"meetings", "meetings.recurrence"})

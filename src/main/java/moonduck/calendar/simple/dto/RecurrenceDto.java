@@ -3,6 +3,9 @@ package moonduck.calendar.simple.dto;
 import moonduck.calendar.simple.entity.Recurrence;
 import moonduck.calendar.simple.enumeration.RecurrenceType;
 
+/**
+ * 반복 설정과 관련된 데이터 교환 객체 
+ */
 public class RecurrenceDto {
 	private Integer id;
 	private RecurrenceType type;
@@ -21,7 +24,7 @@ public class RecurrenceDto {
 		return count;
 	}
 
-	public int getDayOfWeek() {
+	public Integer getDayOfWeek() {
 		return dayOfWeek;
 	}
 	

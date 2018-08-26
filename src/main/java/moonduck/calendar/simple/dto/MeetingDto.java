@@ -12,6 +12,9 @@ import moonduck.calendar.simple.entity.Meeting;
 import moonduck.calendar.simple.entity.Room;
 import moonduck.calendar.simple.validator.annotation.ValidMeeting;
 
+/**
+ * 회의에 관한 데이터 교환을 담당하는 객체 
+ */
 @ValidMeeting
 public class MeetingDto {
 	private Integer id;

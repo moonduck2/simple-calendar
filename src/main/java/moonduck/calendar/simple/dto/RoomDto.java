@@ -7,6 +7,9 @@ import javax.validation.constraints.NotNull;
 
 import moonduck.calendar.simple.entity.Room;
 
+/**
+ * 회의실과 관련된 데이터 교환 객체
+ */
 public class RoomDto {
 	private Integer id;
 	@NotNull private String name;

@@ -48,8 +48,8 @@ public class ApiController {
 		meetingService.deleteMeeting(meetingId);
 	}
 	
-	@GetMapping(path = "rooms")
-	public void getAllRooms() {
-		
+	@GetMapping(path = "{meetingId}")
+	public MeetingDto getMeeting(@PathVariable int meetingId) {
+		return meetingService.getMeetingById(meetingId);
 	}
 }

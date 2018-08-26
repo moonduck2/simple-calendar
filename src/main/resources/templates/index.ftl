@@ -125,7 +125,7 @@
 						<div class="col">
 							<div class="row">
 								<div class="col">
-									<label><input	type="radio" name="recurrenceDayOfWeek" data-order=1 disabled>월</label>
+									<label><input	type="radio" name="recurrenceDayOfWeek" data-order=1 disabled checked>월</label>
 								</div>
 								<div class="col">
 									<label><input type="radio" name="recurrenceDayOfWeek"	data-order=2 disabled>화</label>
@@ -150,6 +150,7 @@
 					</div>
 					<div class="row text-center">
 						<div class="col">
+							<input type="hidden" id="meetingIdHidden">
 							<button type="submit" class="btn btn-primary">Submit</button>
 						</div>
 					</div>
@@ -287,6 +288,9 @@
 				$("#today h2").text(dateStr);
 				$("#today").data("today", dateStr);
 			}
+			function clearHidden() {
+				$("#meetingIdHidden").val('');
+			}
 			function init(today) {
 				var todayStr = today.getFullYear()
 					+ "-" + ("0" + (today.getMonth() + 1)).slice(-2)
@@ -296,13 +300,13 @@
 					url : "http://localhost:8080/api/meeting?date=" + todayStr,
 					crossDomain : true,
 					success : function(data) {
-						console.log(data)
 						var templateData;
 						setAllMeetingRoom(data);
 						
 						templateData = buildRoomsOccupation(data);
 						$("#timeTableArea").html(timeTableTemplate(templateData));
-						modifyDate(todayStr)
+						modifyDate(todayStr);
+						clearHidden();
 					}
 				})	
 			}
@@ -338,7 +342,10 @@
 						startTime : $("#newMeetingStartTime").val(),
 						endTime : $("#newMeetingEndTime").val(),
 						meetingRoom: parseInt($("#roomSelectBox option:selected").data('room-id'))
-				};
+				}
+				if ($("#meetingIdHidden").val()) {
+					data.id = parseInt($("#meetingIdHidden").val());
+				}
 				if($("#isRecurrence").is(":checked")) {
 					data.recurrence = {
 							dayOfWeek : $("#newMeetingRecurrence input:radio:checked").data("order"),
@@ -347,10 +354,41 @@
 					}
 				}
 				return data;
+			};
+			function setMeeting(meeting) {
+				var radios;
+				$("#newMeetingStartDate").val(meeting.startDate),
+				$("#newMeetingEndDate").val(meeting.endDate),
+				$("#newMeetingTitle").val(meeting.title),
+				$("#newMeetingContent").val(meeting.content),
+				$("#newMeetingOwner").val(meeting.userName),
+				$("#newMeetingStartTime").val(meeting.startTime),
+				$("#newMeetingEndTime").val(meeting.endTime),
+				$("#roomSelectBox [data-room-id=" + meeting.meetingRoom +"]")
+				
+				$("#meetingIdHidden").val(meeting.id)
+				if (meeting.recurrence) {
+					$("#isRecurrence").attr("checked", true)
+					if (meeting.recurrence.dayOfWeek) {
+						
+						$("#newMeetingRecurrence input:radio").attr("disabled", false)
+						$("#newMeetingRecurrence input:radio[data-order=" + meeting.recurrence.dayOfWeek + "]").attr("checked", true);
+					}
+					if (meeting.recurrence.count) {
+						$("#recurrenceNumber").val(meeting.recurrence.count)
+					}
+				}
 			}
 			$("#timeTableArea").on("click", ".modifyMeeting", function(e) {
-				alert($(this).data("meetingId"))
-				
+				$.ajax({
+					url : "http://localhost:8080/api/meeting/" + $(this).data("meetingId"),
+					success : function(meeting) {
+						setMeeting(meeting)
+					},
+					error : function(xhr, textStatus, errorThrown) {
+						alert(xhr.responseJSON.message);
+					}
+				})
 			})
 			$("#timeTableArea").on("click", ".deleteMeeting", function(e) {
 				$.ajax({

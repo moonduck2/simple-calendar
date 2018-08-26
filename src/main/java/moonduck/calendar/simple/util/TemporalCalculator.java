@@ -16,8 +16,7 @@ public final class TemporalCalculator {
 	 * @return 시작일을 포함해서 반복 후 마지막 날짜
 	 */
 	public static LocalDate calcLastDate(LocalDate start, DayOfWeek dayOfWeek, Integer recurrence) {
-		return start.getDayOfWeek() == dayOfWeek ? start.plusDays(7 * (recurrence - 1)) : //시작일 포함
-				start.with(TemporalAdjusters.next(dayOfWeek)).plusDays(7 * (recurrence - 1));
+		return start.with(TemporalAdjusters.nextOrSame(dayOfWeek)).plusDays(7 * (recurrence - 1));
 	}
 	
 	/**
@@ -27,9 +26,6 @@ public final class TemporalCalculator {
 	 * @return 가장 가까운 dayOfWeek의 날짜
 	 */
 	public static LocalDate calcFirstDate(LocalDate start, DayOfWeek dayOfWeek) {
-		if (start.getDayOfWeek() == dayOfWeek) {
-			return start;
-		}
-		return start.with(TemporalAdjusters.next(dayOfWeek));
+		return start.with(TemporalAdjusters.nextOrSame(dayOfWeek));
 	}
 }
