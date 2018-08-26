@@ -17,7 +17,10 @@
 # 어플리케이션 확인
 http://{server address}:8080/meeting (ex. http://localhost:8080/meeting)
 
-
+# DB확인(no password)
+http://localhost:8080/h2-console/login.jsp?  
+JDBC URL : jdbc:h2:mem:testdb  
+username : sa  
 
 # 문제 해결 전략
 
