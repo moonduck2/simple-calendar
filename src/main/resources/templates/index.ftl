@@ -141,6 +141,7 @@
 					<div class="row text-center">
 						<div class="col">
 							<input type="hidden" id="meetingIdHidden">
+							<input type="hidden" id="operation" value="post">
 							<button type="submit" class="btn btn-primary">Submit</button>
 						</div>
 					</div>

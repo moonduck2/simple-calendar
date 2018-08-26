@@ -92,6 +92,7 @@ var CalendarUtil = {
 	},
 	clearHidden : function() {
 		$("#meetingIdHidden").val('');
+		CalendarUtil.setNew();
 	},
 	init : function(today) {
 		var todayStr = today.getFullYear()
@@ -133,6 +134,15 @@ var CalendarUtil = {
 	},
 	currentDate : function() {
 		return CalendarUtil.parseDate($("#today").data("today"));
+	},
+	setUpdate : function() {
+		$("#operation").val("put");
+	},
+	setNew : function() {
+		$("#operation").val("post");
+	},
+	getMethod : function() {
+		return $("#operation").val();
 	},
 	getNewMeeting : function () {
 		var data = {

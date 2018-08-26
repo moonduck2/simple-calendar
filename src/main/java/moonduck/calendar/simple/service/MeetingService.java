@@ -57,21 +57,24 @@ public class MeetingService {
 	 */
 	@Transactional
 	public int addMeeting(MeetingDto meeting) throws MeetingDuplicationException {
-		return addMeeting(meeting, meetingEntity ->  {
-			meetingEntity.setEnabled(true);
-			return meetingEntity.getId();
-		});
+		return addMeeting(meeting, 
+			meetingDto -> meetingDao.findAllMeetingInDateAndTime(meeting.getMeetingRoom(), 
+				meeting.getStartDate(), meeting.getEndDate(),
+				meeting.getStartTime(), meeting.getEndTime()),
+			meetingEntity ->  {
+				meetingEntity.setEnabled(true);
+				return meetingEntity.getId();
+			});
 	}
 	
-	private int addMeeting(MeetingDto meeting, Function<Meeting, Integer> successFunc) {
+	private int addMeeting(MeetingDto meeting, 
+			Function<MeetingDto, List<Meeting>> fetchStrategy,
+			Function<Meeting, Integer> successFunc) {
 		util.normalizeMeeting(meeting);
 		
 		Meeting meetingEntity = saveMeeting(meeting, false);
 
-		List<Meeting> possibleDuplicate = meetingDao.findAllMeetingInDateAndTime(
-				meeting.getMeetingRoom(), 
-				meeting.getStartDate(), meeting.getEndDate(),
-				meeting.getStartTime(), meeting.getEndTime());
+		List<Meeting> possibleDuplicate = fetchStrategy.apply(meeting);
 		
 		//meetingEntity와 시간이 겹치는 회의 중 가장 먼저 예약된 회의를 찾는다.
 		Optional<Meeting> duplicatedMeetings = recurChecker.getFirstInDuplicatedMeeting(
@@ -107,13 +110,15 @@ public class MeetingService {
 		util.normalizeMeeting(meeting);
 		Meeting oldMeetingEntity = meetingDao.findById(meeting.getId()).orElseThrow(() -> new MeetingNotFoundException(meeting.getId()));
 		
-		return addMeeting(meeting, newMeetingEntity -> {
-			EntityTransaction tx = entityManager.getTransaction();
-			newMeetingEntity.setEnabled(true);
-			meetingDao.delete(oldMeetingEntity);
-			tx.commit();
-			return newMeetingEntity.getId();
-		});
+		return addMeeting(meeting, 
+			meetingDto -> meetingDao.findAllMeetingInDateAndTime(meeting.getMeetingRoom(), 
+				meeting.getStartDate(), meeting.getEndDate(),
+				meeting.getStartTime(), meeting.getEndTime(), meetingDto.getId()),
+			newMeetingEntity -> {
+				newMeetingEntity.setEnabled(true);
+				meetingDao.delete(oldMeetingEntity);
+				return newMeetingEntity.getId();
+			});
 	}
 	
 	/**

@@ -4,6 +4,7 @@ $(document).ready(function() {
 			url : "http://localhost:8080/api/meeting/" + $(this).data("meetingId"),
 			success : function(meeting) {
 				CalendarUtil.setMeeting(meeting)
+				$("#operation").val("put");//수정
 			},
 			error : function(xhr, textStatus, errorThrown) {
 				alert(xhr.responseJSON.message);
@@ -36,7 +37,7 @@ $(document).ready(function() {
 		var data = CalendarUtil.getNewMeeting();
 		$.ajax({
 			url : "http://localhost:8080/api/meeting",
-			method : "post",
+			method : CalendarUtil.getMethod(),
 			contentType : "application/json;charset=utf-8",
 			dataType : 'json',
 			data : JSON.stringify(data),

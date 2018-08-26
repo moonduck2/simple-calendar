@@ -26,4 +26,15 @@ public interface MeetingDao extends CrudRepository<Meeting, Integer> {
 	List<Meeting> findAllMeetingInDateAndTime(@Param("room") int roomId, 
 			@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, 
 			@Param("startTime") LocalTime baseTime, @Param("endTime") LocalTime endTime);
+	
+	
+	@EntityGraph(attributePaths="recurrence")
+	@Query("select m from Meeting m left join m.recurrence where m.meetingRoom.id = :room"
+			+ " and m.id != :excludeId"
+			+ " and ((m.startDate <= :startDate and m.endDate >= :startDate) or (m.startDate <= :endDate and m.endDate >= :endDate))"
+			+ " and ((m.startTime <= :startTime and m.endTime > :startTime) or (m.startTime < :endTime and m.endTime >= :endTime))")
+	List<Meeting> findAllMeetingInDateAndTime(@Param("room") int roomId, 
+			@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, 
+			@Param("startTime") LocalTime baseTime, @Param("endTime") LocalTime endTime, 
+			@Param("excludeId") int excludeId);
 }

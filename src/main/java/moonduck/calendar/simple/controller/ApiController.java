@@ -40,7 +40,7 @@ public class ApiController {
 	
 	@PutMapping
 	public int modifyMeeting(@RequestBody @Valid MeetingDto meeting) {
-		return meetingService.addMeeting(meeting);
+		return meetingService.modifyMeeting(meeting);
 	}
 	
 	@DeleteMapping("{meetingId}")
