@@ -168,6 +168,7 @@ var CalendarUtil = {
 		return data;
 	},
 	setMeeting : function(meeting) {
+		console.log(meeting)
 		var radios;
 		$("#newMeetingStartDate").val(meeting.startDate),
 		$("#newMeetingEndDate").val(meeting.endDate),
@@ -176,7 +177,7 @@ var CalendarUtil = {
 		$("#newMeetingOwner").val(meeting.userName),
 		$("#newMeetingStartTime").val(meeting.startTime),
 		$("#newMeetingEndTime").val(meeting.endTime),
-		$("#roomSelectBox [data-room-id=" + meeting.meetingRoom +"]")
+		$("#roomSelectBox [data-room-id=" + meeting.meetingRoom +"]").attr("selected", true)
 
 		$("#meetingIdHidden").val(meeting.id)
 		if (meeting.recurrence) {
