@@ -6,7 +6,6 @@ import static org.junit.Assert.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Test;

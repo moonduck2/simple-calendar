@@ -6,7 +6,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Arrays;
-import java.util.List;
 import java.util.SortedSet;
 
 import org.junit.Test;
@@ -17,7 +16,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import moonduck.calendar.simple.dto.MeetingDto;
 import moonduck.calendar.simple.dto.RecurrenceDto;
 import moonduck.calendar.simple.entity.Meeting;
-import moonduck.calendar.simple.enumeration.RecurrenceType;
 
 @RunWith(SpringRunner.class)
 public class CalendarUtilServiceTest {
